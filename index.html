@@ -1,0 +1,2409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Caden Sherrard - Paid Social Video Editor</title>
+
+  <!-- ============================================================
+     HOW TO CUSTOMIZE THIS FILE
+
+     1. HERO VIDEO (1920x1080 collage reel): search this file for the
+        text HERO VIDEO. Replace the empty source src with your own
+        file path, e.g. src="videos/hero-reel.mp4", and set
+        poster="images/hero-poster.jpg" to a still frame.
+
+     2. WORK PREVIEW ROW (3 hover-to-play cards): search for the text
+        WORK PREVIEW CARD. Each video tag is labelled with the
+        campaign it belongs to. Swap the src and poster the same way.
+
+     3. CASE STUDY VIDEOS: search for the text CASE STUDY VIDEO inside
+        each case study section and swap src and poster as above. The
+        TOF and win-back case studies use a masonry grid instead (two
+        videos, plus two square slots) - search for CASE STUDY GRID
+        VIDEO and CASE STUDY GRID IMAGE and fill in each src the same
+        way. The TOF grid's second square slot is a carousel
+        (CAROUSEL TILE) - add/remove .cs-carousel-slide divs inside
+        .cs-carousel-track to change its slides.
+
+     4. AD SET EXPLORER (club tabs in the TOF case study): search this
+        file for the text clubAssets near the top of the script. Fill
+        in each club's image1/image2/video1/video2 with file paths -
+        leave any field empty to keep showing its placeholder box.
+        image1/image2 can also be a list of file paths instead of one
+        - that automatically renders as a swipeable carousel (arrows,
+        drag/flick, flick hint), matching the carousels used elsewhere
+        on the site.
+
+     5. COPY: the goal and approach paragraphs in each case study are
+        drafted from your CSV data. Swap in your own specifics about
+        the creative approach wherever you see an EDIT placeholder.
+
+     All stats (purchases, impressions, reach, ROAS) are pulled
+     directly from your Meta Ads Manager exports. Spend figures were
+     intentionally excluded per your request.
+  ============================================================ -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg: #0a0c0f;
+    --bg-elevated: #14171c;
+    --bg-elevated-2: #1c2027;
+    --accent: #ff4d1c;
+    --accent-dim: #cc3d15;
+    --accent-soft: rgba(255, 77, 28, 0.12);
+    --positive: #c6ff3d;
+    --text: #f5f3ee;
+    --text-muted: #9ca3af;
+    --text-faint: #5b6069;
+    --border: rgba(245, 243, 238, 0.1);
+    --border-strong: rgba(245, 243, 238, 0.18);
+
+    --font-display: 'Anton', sans-serif;
+    --font-body: 'Space Grotesk', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  img, video { max-width: 100%; display: block; }
+
+  /* Prevents iOS Safari's long-press copy/save-media menu from firing on
+     the preview tiles, so tap-to-play can work without a system menu
+     interrupting it. */
+  video, .work-card, .cs-tile, .adset-tile, .skill-card {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .wrap {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    display: inline-block;
+    margin-bottom: 14px;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    text-transform: uppercase;
+    line-height: 0.95;
+    letter-spacing: 0.01em;
+  }
+
+  /* ============ NAV ============ */
+  .nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 32px;
+    background: linear-gradient(to bottom, rgba(10,12,15,0.9), transparent);
+    backdrop-filter: blur(4px);
+  }
+
+  .nav-mark {
+    font-family: var(--font-display);
+    font-size: 22px;
+    letter-spacing: 0.02em;
+  }
+
+  .nav-mark span { color: var(--accent); }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .nav-links a { transition: color 0.2s ease; }
+  .nav-links a:hover { color: var(--text); }
+
+  @media (max-width: 640px) {
+    .nav-links { display: none; }
+  }
+
+  /* ============ HERO ============ */
+  .hero {
+    position: relative;
+    height: 100vh;
+    min-height: 600px;
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+  }
+
+  .hero-media {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+  }
+
+  .hero-media-placeholder {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background:
+      repeating-linear-gradient(135deg, rgba(255,77,28,0.06) 0px, rgba(255,77,28,0.06) 2px, transparent 2px, transparent 24px),
+      linear-gradient(160deg, #1c2027 0%, #0a0c0f 70%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 0;
+  }
+
+  .hero-media-placeholder-inner {
+    border: 1px dashed var(--border-strong);
+    padding: 24px 32px;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-faint);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    max-width: 320px;
+  }
+
+  .hero-media-placeholder-inner strong {
+    display: block;
+    color: var(--text-muted);
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(10,12,15,0.97) 0%, rgba(10,12,15,0.55) 45%, rgba(10,12,15,0.15) 75%);
+    z-index: 1;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    padding: 0 32px 72px;
+  }
+
+  .hero-inner {
+    max-width: 1240px;
+    margin: 0 auto;
+  }
+
+  .hero-name {
+    font-size: clamp(52px, 11vw, 148px);
+    letter-spacing: -0.01em;
+  }
+
+  .hero-tagline {
+    font-family: var(--font-mono);
+    font-size: clamp(13px, 1.6vw, 17px);
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+    margin-top: 18px;
+    max-width: 560px;
+    text-transform: uppercase;
+  }
+
+  .hero-scroll-cue {
+    position: absolute;
+    bottom: 28px;
+    right: 32px;
+    z-index: 2;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-faint);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .hero-scroll-cue .line {
+    width: 28px;
+    height: 1px;
+    background: var(--text-faint);
+    animation: pulse-line 2s ease-in-out infinite;
+  }
+
+  /* On mobile, a 100vh hero forces a landscape clip to be cropped down to a
+     thin vertical sliver via object-fit: cover, and previously sat right at
+     the very top of the page - directly underneath the fixed nav bar, which
+     hid part of the video and the name behind it. Fixed here by:
+     - pushing the hero down below the nav bar entirely (margin-top, using
+       the nav's real measured height so there's never any overlap at top)
+     - sizing the hero to the video's real aspect ratio (set via JS once the
+       video's metadata loads) rather than assuming 16:9, so it displays as
+       large as possible with zero cropping and zero letterboxing
+     - tightening the name/tagline so they sit compactly at the very bottom
+       of the video and only ever overlap it from below, never from above */
+  @media (max-width: 640px) {
+    .hero {
+      height: auto;
+      min-height: 0;
+      margin-top: var(--nav-height, 70px);
+      aspect-ratio: 16 / 9; /* fallback until JS sets the video's real ratio */
+    }
+    .hero-media,
+    .hero-media-placeholder {
+      object-fit: contain;
+      background: var(--bg);
+    }
+    .hero-scroll-cue { display: none; }
+    .hero-content {
+      padding: 0 20px 16px;
+    }
+    .hero-name {
+      font-size: clamp(30px, 11vw, 56px);
+    }
+    .hero-tagline {
+      font-size: 11px;
+      margin-top: 10px;
+    }
+  }
+
+  @keyframes pulse-line {
+    0%, 100% { transform: scaleX(1); opacity: 0.5; }
+    50% { transform: scaleX(1.6); opacity: 1; }
+  }
+
+  /* ============ TICKER (signature element) ============ */
+  .ticker {
+    background: var(--accent);
+    border-top: 1px solid rgba(0,0,0,0.2);
+    border-bottom: 1px solid rgba(0,0,0,0.2);
+    overflow: hidden;
+    position: relative;
+    z-index: 3;
+    contain: layout paint;
+  }
+
+  .ticker-track {
+    display: flex;
+    width: max-content;
+    /* Scrolled via JS (updating transform every frame) rather than a CSS
+       @keyframes animation - iOS Safari was intermittently failing to
+       repaint the CSS-animated version during a scroll and dropping it
+       entirely. A JS-driven transform sidesteps that. will-change keeps it
+       on its own compositor layer so each frame is a cheap composite-only
+       update rather than a repaint. */
+    will-change: transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+
+  .ticker-item {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    color: #0a0c0f;
+    white-space: nowrap;
+    padding: 12px 0;
+    display: flex;
+    align-items: center;
+  }
+
+  .ticker-item::after {
+    content: '//';
+    margin: 0 28px;
+    opacity: 0.5;
+  }
+
+  /* ============ SECTION HEADERS ============ */
+  section { padding: 120px 0; }
+
+  .section-head {
+    max-width: 640px;
+    margin-bottom: 64px;
+  }
+
+  .section-head h2 {
+    font-size: clamp(34px, 5vw, 56px);
+  }
+
+  .section-head p {
+    color: var(--text-muted);
+    font-size: 16px;
+    margin-top: 16px;
+    max-width: 520px;
+  }
+
+  /* ============ INTRO ============ */
+  .intro {
+    padding: 96px 0 40px;
+  }
+
+  .intro-grid {
+    display: grid;
+    grid-template-columns: 0.9fr 1.4fr;
+    gap: 64px;
+    align-items: start;
+  }
+
+  @media (max-width: 800px) {
+    .intro-grid { grid-template-columns: 1fr; gap: 32px; }
+  }
+
+  .intro-photo {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+
+  .intro-photo img {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  }
+
+  .intro-body p {
+    font-size: 20px;
+    line-height: 1.6;
+    color: var(--text);
+    font-weight: 400;
+  }
+
+  .intro-body p + p { margin-top: 20px; color: var(--text-muted); font-size: 17px; }
+
+  .intro-facts {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+    margin-top: 40px;
+  }
+
+  @media (max-width: 480px) {
+    .intro-facts { grid-template-columns: 1fr; gap: 28px; }
+  }
+
+  .intro-fact-num {
+    font-family: var(--font-display);
+    font-size: 40px;
+    color: var(--positive);
+    line-height: 1;
+  }
+
+  .intro-fact-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-top: 6px;
+  }
+
+  /* ============ WORK PREVIEW ROW ============ */
+  .work-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    align-items: center;
+  }
+
+  @media (max-width: 900px) {
+    .work-row { grid-template-columns: 1fr; }
+  }
+
+  .work-card {
+    position: relative;
+    aspect-ratio: 3 / 4; /* default until the real video loads and sets its own ratio */
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    cursor: pointer;
+  }
+
+  .work-card-media {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: var(--bg-elevated);
+  }
+
+  .work-card-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(160deg, var(--bg-elevated-2), var(--bg-elevated));
+  }
+
+  .work-card-placeholder span {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border: 1px dashed var(--border-strong);
+    padding: 10px 16px;
+  }
+
+  .work-card-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 22px;
+    background: linear-gradient(to top, rgba(10,12,15,0.92) 0%, rgba(10,12,15,0.1) 55%, transparent 75%);
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .work-card-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .work-card-title {
+    font-family: var(--font-display);
+    font-size: 24px;
+    text-transform: uppercase;
+    line-height: 1;
+  }
+
+  .work-card-hint {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    z-index: 3;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    background: rgba(10,12,15,0.6);
+    border: 1px solid var(--border-strong);
+    padding: 5px 9px;
+    border-radius: 20px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: opacity 0.2s ease;
+  }
+
+  .work-card.is-playing .work-card-hint { opacity: 0; }
+
+  /* ============ CASE STUDY INDEX (clickable links) ============ */
+  .index-list {
+    border-top: 1px solid var(--border);
+  }
+
+  .index-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 32px 0;
+    border-bottom: 1px solid var(--border);
+    transition: padding-left 0.25s ease, border-color 0.25s ease;
+  }
+
+  .index-row:hover {
+    padding-left: 16px;
+    border-color: var(--border-strong);
+  }
+
+  .index-row-left {
+    display: flex;
+    align-items: baseline;
+    gap: 24px;
+  }
+
+  .index-tag {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-faint);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    width: 130px;
+    flex-shrink: 0;
+  }
+
+  .index-title {
+    font-family: var(--font-display);
+    font-size: clamp(24px, 3.4vw, 38px);
+    text-transform: uppercase;
+    transition: color 0.2s ease;
+  }
+
+  .index-row:hover .index-title { color: var(--accent); }
+
+  .index-stat {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--positive);
+    white-space: nowrap;
+  }
+
+  .index-arrow {
+    font-family: var(--font-mono);
+    font-size: 20px;
+    color: var(--text-faint);
+    margin-left: 24px;
+    transition: transform 0.2s ease, color 0.2s ease;
+  }
+
+  .index-row:hover .index-arrow {
+    color: var(--accent);
+    transform: rotate(45deg);
+  }
+
+  @media (max-width: 700px) {
+    .index-row { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .index-row-left { flex-direction: column; gap: 6px; }
+    .index-stat, .index-arrow { display: none; }
+  }
+
+  /* ============ CASE STUDIES ============ */
+  .case-study {
+    padding: 100px 0;
+    border-top: 1px solid var(--border);
+    scroll-margin-top: 40px;
+  }
+
+  .case-study-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+  }
+
+  .case-study.reverse .case-study-grid { direction: rtl; }
+  .case-study.reverse .case-study-grid > * { direction: ltr; }
+
+  @media (max-width: 900px) {
+    .case-study-grid { grid-template-columns: 1fr; }
+    .case-study.reverse .case-study-grid { direction: ltr; }
+  }
+
+  .case-study-media {
+    position: relative;
+    aspect-ratio: 4 / 5; /* default until the real video loads and sets its own ratio */
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+  }
+
+  .case-study-media video {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  }
+
+  .case-study-media-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(160deg, var(--bg-elevated-2), var(--bg-elevated));
+  }
+
+  .case-study-media-placeholder span {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border: 1px dashed var(--border-strong);
+    padding: 10px 16px;
+  }
+
+  /* ============ CASE STUDY MEDIA GRID (masonry, true aspect ratios) ============ */
+  .case-study-media-grid {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .cs-col {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .cs-tile {
+    position: relative;
+    overflow: hidden;
+    border-radius: 4px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+  }
+
+  .cs-tile.aspect-square { aspect-ratio: 1 / 1; }
+  .cs-tile.aspect-portrait { aspect-ratio: 9 / 16; }
+
+  .cs-tile-media {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .cs-tile-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(160deg, var(--bg-elevated-2), var(--bg-elevated));
+  }
+
+  .cs-tile-placeholder span {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border: 1px dashed var(--border-strong);
+    padding: 7px 11px;
+  }
+
+  .cs-tile.has-media .cs-tile-placeholder {
+    display: none;
+  }
+
+  .cs-tile-hint {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 3;
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    color: var(--text-muted);
+    background: rgba(10,12,15,0.6);
+    border: 1px solid var(--border-strong);
+    padding: 4px 8px;
+    border-radius: 20px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: opacity 0.2s ease;
+  }
+
+  .cs-tile.is-playing .cs-tile-hint,
+  .adset-tile.is-playing .cs-tile-hint {
+    opacity: 0;
+  }
+
+  @media (max-width: 900px) {
+    .case-study-media-grid { max-width: 480px; margin: 0 auto; }
+  }
+
+  @media (max-width: 420px) {
+    .case-study-media-grid { flex-direction: column; }
+  }
+
+  /* ============ CAROUSEL TILE (Previous Winner carousel ad) ============ */
+  .cs-carousel {
+    cursor: grab;
+    touch-action: pan-y;
+  }
+
+  .cs-carousel:active {
+    cursor: grabbing;
+  }
+
+  .cs-carousel-track {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    height: 100%;
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+  }
+
+  .cs-carousel-slide {
+    position: relative;
+    flex: 0 0 100%;
+    width: 100%;
+    height: 100%;
+  }
+
+  .cs-carousel-slide img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    -webkit-user-drag: none;
+    user-select: none;
+  }
+
+  .cs-carousel-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 4;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(10,12,15,0.55);
+    color: var(--text);
+    font-size: 20px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s ease, background 0.2s ease;
+  }
+
+  .cs-carousel:hover .cs-carousel-arrow,
+  .cs-carousel.is-hinting .cs-carousel-arrow {
+    opacity: 0.55;
+  }
+
+  @keyframes cs-carousel-peek {
+    0%, 78%, 100% { transform: translateX(0); }
+    38% { transform: translateX(-8%); }
+  }
+
+  .cs-carousel.is-hinting .cs-carousel-track {
+    animation: cs-carousel-peek 1.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cs-carousel.is-hinting .cs-carousel-track { animation: none; }
+    .hero-scroll-cue .line { animation: none; }
+  }
+
+  .cs-carousel-arrow:hover {
+    opacity: 1 !important;
+    background: var(--accent);
+  }
+
+  .cs-carousel-prev { left: 10px; }
+  .cs-carousel-next { right: 10px; }
+
+  .case-study-title {
+    font-size: clamp(32px, 4.5vw, 50px);
+    margin-bottom: 24px;
+  }
+
+  .case-study-copy p {
+    color: var(--text-muted);
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  .case-study-copy p + p { margin-top: 16px; }
+
+  .case-study-list {
+    list-style: none;
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .case-study-list li {
+    color: var(--text-muted);
+    font-size: 16px;
+    line-height: 1.7;
+    padding-left: 20px;
+    position: relative;
+  }
+
+  .case-study-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 10px;
+    width: 8px;
+    height: 2px;
+    background: var(--accent);
+  }
+
+  .case-study-list li strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .case-study-copy .label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    display: block;
+    margin-bottom: 6px;
+    margin-top: 22px;
+  }
+
+  .case-study-copy .label:first-child { margin-top: 0; }
+
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: var(--border);
+    margin-top: 36px;
+    border: 1px solid var(--border);
+  }
+
+  .stat-cell {
+    background: var(--bg);
+    padding: 20px;
+  }
+
+  .stat-num {
+    font-family: var(--font-display);
+    font-size: 30px;
+    color: var(--positive);
+    line-height: 1;
+  }
+
+  .stat-lbl {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: 8px;
+  }
+
+  .callout {
+    margin-top: 20px;
+    padding: 14px 16px;
+    background: var(--accent-soft);
+    border-left: 2px solid var(--accent);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* ============ AD SET EXPLORER (per-club content grid) ============ */
+  .adset-explorer {
+    margin-top: 80px;
+    padding-top: 64px;
+    border-top: 1px solid var(--border);
+  }
+
+  .adset-head {
+    max-width: 620px;
+    margin-bottom: 36px;
+  }
+
+  .adset-head h4 {
+    font-family: var(--font-display);
+    font-size: clamp(26px, 3.2vw, 36px);
+    text-transform: uppercase;
+    line-height: 1;
+    margin-top: 6px;
+  }
+
+  .adset-head p {
+    color: var(--text-muted);
+    font-size: 15px;
+    margin-top: 14px;
+    line-height: 1.6;
+  }
+
+  .adset-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 32px;
+  }
+
+  .adset-tab {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    background: transparent;
+    border: 1px solid var(--border-strong);
+    border-radius: 20px;
+    padding: 9px 18px;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .adset-tab:hover {
+    color: var(--text);
+    border-color: var(--text-muted);
+  }
+
+  .adset-tab.is-active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #0a0c0f;
+    font-weight: 700;
+  }
+
+  .adset-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    align-items: start;
+  }
+
+  @media (max-width: 900px) {
+    .adset-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .adset-tile {
+    position: relative;
+    aspect-ratio: 4 / 5; /* default until real content loads and sets its own ratio */
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+  }
+
+  .adset-tile > img,
+  .adset-tile > video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: none;
+  }
+
+  .adset-tile.has-media > img,
+  .adset-tile.has-media > video {
+    display: block;
+  }
+
+  .adset-tile .cs-carousel {
+    position: absolute;
+    inset: 0;
+  }
+
+  .adset-tile.has-media .adset-tile-placeholder {
+    display: none;
+  }
+
+  .adset-tile-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    text-align: center;
+    background: linear-gradient(160deg, var(--bg-elevated-2), var(--bg-elevated));
+  }
+
+  .adset-tile-placeholder span {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border: 1px dashed var(--border-strong);
+    padding: 8px 10px;
+  }
+
+  .adset-tile-tag {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 2;
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    color: var(--text-muted);
+    background: rgba(10,12,15,0.65);
+    border: 1px solid var(--border-strong);
+    padding: 4px 8px;
+    border-radius: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  /* ============ OTHER SKILLS ============ */
+  #other-skills { scroll-margin-top: 40px; }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+  }
+
+  @media (max-width: 1100px) {
+    .skills-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 700px) {
+    .skills-grid { grid-template-columns: 1fr; }
+  }
+
+  .skill-card {
+    display: block;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s ease, border-color 0.4s ease;
+  }
+
+  .skill-card.is-active {
+    transform: translateY(-10px) scale(1.06);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    border-color: var(--border-strong);
+    z-index: 2;
+  }
+
+  .skill-card.push-left { transform: translateX(-22px); }
+  .skill-card.push-right { transform: translateX(22px); }
+
+  .skill-card-media {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    background: linear-gradient(160deg, var(--bg-elevated-2), var(--bg-elevated));
+  }
+
+  .skill-card-media img,
+  .skill-card-media video {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  }
+
+  .skill-card-media-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .skill-card-media-placeholder span {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border: 1px dashed var(--border-strong);
+    padding: 10px 16px;
+    text-align: center;
+    max-width: 180px;
+  }
+
+  .skill-card-body {
+    padding: 24px;
+  }
+
+  .skill-card-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  .skill-card-title {
+    font-family: var(--font-display);
+    font-size: 26px;
+    text-transform: uppercase;
+    line-height: 1.05;
+    margin-bottom: 14px;
+  }
+
+  .skill-card-copy {
+    font-size: 14.5px;
+    line-height: 1.65;
+    color: var(--text-muted);
+  }
+
+  .skill-card-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 18px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .skill-card-cta svg {
+    width: 14px;
+    height: 14px;
+    transition: transform 0.2s ease;
+  }
+
+  .skill-card:hover .skill-card-cta svg {
+    transform: translateX(4px);
+  }
+
+  /* ============ FOOTER / CONTACT ============ */
+  .contact {
+    padding: 140px 0 60px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+  }
+
+  .contact h2 {
+    font-size: clamp(38px, 7vw, 84px);
+    max-width: 900px;
+    margin: 0 auto 40px;
+  }
+
+  .contact-links {
+    display: flex;
+    justify-content: center;
+    gap: 36px;
+    flex-wrap: wrap;
+    font-family: var(--font-mono);
+    font-size: 15px;
+  }
+
+  .contact-links a {
+    border-bottom: 1px solid var(--border-strong);
+    padding-bottom: 4px;
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .contact-links a:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .footer-meta {
+    margin-top: 90px;
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-mark">CADEN<span>.</span></div>
+  <div class="nav-links">
+    <a href="#work">Work</a>
+    <a href="#case-studies">Case Studies</a>
+    <a href="#other-skills">Other Skills</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <!-- HERO VIDEO: replace src below with your 1920x1080 collage reel -->
+  <video class="hero-media" autoplay muted loop playsinline poster="hero-showcase-reel-poster.jpg">
+    <source src="hero-showcase-reel.mp4" type="video/mp4">
+  </video>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-inner">
+      <h1 class="hero-name">Caden<br>Sherrard</h1>
+      <p class="hero-tagline">Paid Social Video Editor & Content Producer - Performance-Driven Creative</p>
+    </div>
+  </div>
+  <div class="hero-scroll-cue"><span class="line"></span>Scroll</div>
+</header>
+
+<!-- ============ TICKER ============ -->
+<div class="ticker">
+  <div class="ticker-track" id="tickerTrack">
+    <!-- content duplicated via JS for seamless loop -->
+  </div>
+</div>
+
+<!-- ============ INTRO ============ -->
+<section class="intro">
+  <div class="wrap">
+    <div class="intro-grid">
+      <div class="intro-photo">
+        <img src="about-photo.jpg" alt="Caden Sherrard">
+      </div>
+      <div class="intro-body">
+        <span class="eyebrow">About</span>
+        <p>Five years at Football Prizes, all of them spent editing paid social video, every day, for one brand - which means the learning curve happened in production, not in theory.</p>
+        <p>This portfolio isn't a highlight reel of transitions. It's three campaigns, each published exclusively on Meta, treated as case studies: what the brief was, what the edit did, and what actually moved.</p>
+        <div class="intro-facts">
+          <div>
+            <div class="intro-fact-num">5</div>
+            <div class="intro-fact-label">Years at Football Prizes</div>
+          </div>
+          <div>
+            <div class="intro-fact-num">5</div>
+            <div class="intro-fact-label">Years editing paid social daily</div>
+          </div>
+          <div>
+            <div class="intro-fact-num">100%</div>
+            <div class="intro-fact-label">Published on Meta</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WORK PREVIEW ROW ============ -->
+<section id="work">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Selected Work</span>
+      <h2>Hover to preview</h2>
+      <p>Three favourites from the last three years. Hover on desktop, or press and hold on mobile, to play.</p>
+    </div>
+
+    <div class="work-row">
+      <!-- WORK PREVIEW CARD 1: TOF campaign clip -->
+      <div class="work-card" data-card>
+        <video class="work-card-media" muted loop playsinline preload="metadata" poster="tof-poster.jpg">
+          <source src="tof-intro-motion-graphics.mp4" type="video/mp4">
+        </video>
+        <div class="work-card-hint">Hold to play</div>
+        <div class="work-card-overlay">
+          <div class="work-card-eyebrow">Top of Funnel</div>
+          <div class="work-card-title">New Customer Reach</div>
+        </div>
+      </div>
+
+      <!-- WORK PREVIEW CARD 2: Win-back campaign clip -->
+      <div class="work-card" data-card>
+        <video class="work-card-media" muted loop playsinline preload="metadata" poster="win-back-poster.jpg">
+          <source src="win-back-rediscover.mp4" type="video/mp4">
+        </video>
+        <div class="work-card-hint">Hold to play</div>
+        <div class="work-card-overlay">
+          <div class="work-card-eyebrow">Win-Back</div>
+          <div class="work-card-title">60-Day Lapsed Customers</div>
+        </div>
+      </div>
+
+      <!-- WORK PREVIEW CARD 3: Short-life campaign clip -->
+      <div class="work-card" data-card>
+        <video class="work-card-media" muted loop playsinline preload="metadata" poster="short-life-poster.jpg">
+          <source src="short-life-el-clasico.mp4" type="video/mp4">
+        </video>
+        <div class="work-card-hint">Hold to play</div>
+        <div class="work-card-overlay">
+          <div class="work-card-eyebrow">Short-Lifespan</div>
+          <div class="work-card-title">Single Product Sprint</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CASE STUDY INDEX ============ -->
+<section id="case-studies" style="padding-top: 40px;">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">In Depth</span>
+      <h2>Three Campaigns</h2>
+      <p>Every number below comes straight out of Meta Ads Manager for these campaigns.</p>
+    </div>
+
+    <div class="index-list">
+      <a class="index-row" href="#cs-tof">
+        <div class="index-row-left">
+          <span class="index-tag">TOF · New Customers</span>
+          <span class="index-title">Club-Specific Creative</span>
+        </div>
+        <span class="index-stat">11.7× avg ROAS</span>
+        <span class="index-arrow">↗</span>
+      </a>
+      <a class="index-row" href="#cs-winback">
+        <div class="index-row-left">
+          <span class="index-tag">Win-Back · 60+ Days</span>
+          <span class="index-title">Re-Engaging Lapsed Buyers</span>
+        </div>
+        <span class="index-stat">453 purchases</span>
+        <span class="index-arrow">↗</span>
+      </a>
+      <a class="index-row" href="#cs-shortlife">
+        <div class="index-row-left">
+          <span class="index-tag">Short-Lifespan · Product</span>
+          <span class="index-title">Built to Sprint</span>
+        </div>
+        <span class="index-stat">13.3× ROAS in 6 days</span>
+        <span class="index-arrow">↗</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CASE STUDY 1: TOF ============ -->
+<article class="case-study" id="cs-tof">
+  <div class="wrap">
+    <div class="case-study-grid">
+      <div class="case-study-media-grid">
+        <div class="cs-col">
+          <div class="cs-tile aspect-square has-media">
+            <!-- CASE STUDY GRID IMAGE: TOF flat ad, Liverpool (1080x1080 square) -->
+            <img class="cs-tile-media" src="tof-flat-ad.jpg" alt="Brand New Liverpool Prizes - flat ad">
+            <div class="cs-tile-placeholder"><span>Add image</span></div>
+          </div>
+          <div class="cs-tile aspect-portrait has-media" data-cs-video>
+            <!-- CASE STUDY GRID VIDEO 1: TOF narrated evergreen, Liverpool (1080x1920 portrait) -->
+            <video class="cs-tile-media" muted loop playsinline preload="metadata" poster="tof-video-narrated-poster.jpg">
+              <source src="tof-video-narrated.mp4" type="video/mp4">
+            </video>
+            <div class="cs-tile-placeholder"><span>Add video</span></div>
+            <div class="cs-tile-hint">Hold to play</div>
+          </div>
+        </div>
+        <div class="cs-col">
+          <div class="cs-tile aspect-portrait has-media" data-cs-video>
+            <!-- CASE STUDY GRID VIDEO 2: TOF prize showcase, Liverpool (1080x1920 portrait) -->
+            <video class="cs-tile-media" muted loop playsinline preload="metadata" poster="tof-video-showcase-poster.jpg">
+              <source src="tof-video-showcase.mp4" type="video/mp4">
+            </video>
+            <div class="cs-tile-placeholder"><span>Add video</span></div>
+            <div class="cs-tile-hint">Hold to play</div>
+          </div>
+
+          <!-- CAROUSEL TILE: the "Previous Winner" carousel ad, Liverpool - 7 square slides -->
+          <div class="cs-tile aspect-square cs-carousel" data-carousel>
+            <div class="cs-carousel-track">
+              <div class="cs-carousel-slide"><img src="tof-carousel-1-gerrard.jpg" alt="Previous winner - Gerrard montage"></div>
+              <div class="cs-carousel-slide"><img src="tof-carousel-2-klopp.jpg" alt="Previous winner - Klopp shirt on LED"></div>
+              <div class="cs-carousel-slide"><img src="tof-carousel-3-vs-everton.jpg" alt="Previous winner - Liverpool vs Everton hospitality"></div>
+              <div class="cs-carousel-slide"><img src="tof-carousel-4-vs-westham.jpg" alt="Previous winner - Liverpool vs West Ham hospitality"></div>
+              <div class="cs-carousel-slide"><img src="tof-carousel-5-vs-westham-2.jpg" alt="Previous winner - Liverpool vs West Ham hospitality, second pair"></div>
+              <div class="cs-carousel-slide"><img src="tof-carousel-6-signed-shirt.jpg" alt="Previous winner - signed and framed shirt"></div>
+              <div class="cs-carousel-slide"><img src="tof-carousel-7-trent-vandijk.jpg" alt="Previous winner - Alexander-Arnold and Van Dijk dual shirt"></div>
+            </div>
+            <button type="button" class="cs-carousel-arrow cs-carousel-prev" aria-label="Previous slide">‹</button>
+            <button type="button" class="cs-carousel-arrow cs-carousel-next" aria-label="Next slide">›</button>
+          </div>
+        </div>
+      </div>
+      <div>
+        <span class="eyebrow">Top of Funnel · New Customers</span>
+        <h3 class="case-study-title">Club-Specific Creative, Turned Into New Customers</h3>
+        <div class="case-study-copy">
+          <span class="label">The brief</span>
+          <p>Football Prizes needed to acquire first-time customers across a wide base of football fans on Meta. Rather than running one generic ad, the campaign was structured as eleven parallel ad sets - one per club fanbase, from Liverpool and Arsenal down to smaller clubs like Nottingham - each targeted to its own audience and matched with its own creative for optimal performance.</p>
+          <span class="label">The approach</span>
+          <p>Each variant had to walk a line: club-specific enough to feel tailored, without compromising Football Prizes' own brand and colours. The hook in the first three seconds does the heavy lifting - three to four of the club's most desired signed shirts, cut in fast succession. For the Liverpool edit, that's Szoboszlai cutting straight into Steven Gerrard, arguably the club's most iconic player, then Virgil van Dijk, that season's standout performer, then a full squad shirt signed after one of the most famous Champions League finals of all time. Every shirt is a genuine want-item for that fanbase, and all of them land inside the first three seconds.</p>
+          <p>The same structure repeats across all eleven variants, which is what let one core concept scale without feeling copy-pasted. After the hook, the edit widens into everything else Football Prizes offers - hospitality tickets to the Premier League's biggest fixtures, shown through club-relevant stadium imagery (Anfield for Liverpool, Stamford Bridge for Chelsea, and so on), plus the custom-built, custom-designed frames that set Football Prizes apart from other memorabilia competitors. Each edit closes on a fully customisable end frame, leaving room to land whatever final message the campaign needed to get across to the fan base.</p>
+          <span class="label">The result</span>
+          <p>Liverpool was the standout segment - the single largest driver of volume at 3,225 purchases and 13.6× ROAS - while the campaign as a whole has stayed live and profitable since April 2026.</p>
+        </div>
+
+        <div class="stat-grid">
+          <div class="stat-cell">
+            <div class="stat-num">13,866</div>
+            <div class="stat-lbl">Purchases</div>
+          </div>
+          <div class="stat-cell">
+            <div class="stat-num">11.7×</div>
+            <div class="stat-lbl">Avg. ROAS (purchase-weighted)</div>
+          </div>
+          <div class="stat-cell">
+            <div class="stat-num">1.35M</div>
+            <div class="stat-lbl">Impressions</div>
+          </div>
+          <div class="stat-cell">
+            <div class="stat-num">133K</div>
+            <div class="stat-lbl">People Reached</div>
+          </div>
+        </div>
+        <div class="callout">9 audience segments running in parallel · top segment (Liverpool) delivered 3,225 purchases at 13.6× ROAS</div>
+      </div>
+    </div>
+
+    <!-- AD SET EXPLORER: one formula, reskinned per club -->
+    <div class="adset-explorer">
+      <div class="adset-head">
+        <span class="eyebrow">The Ad Sets</span>
+        <h4>One Formula, Nine Clubs</h4>
+        <p>Every club ran the same four-piece formula - two images, two videos - reskinned to fit that fanbase. Switch clubs to see how one core idea flexed across audiences.</p>
+      </div>
+
+      <div class="adset-tabs" id="adsetTabs" role="tablist"></div>
+
+      <div class="adset-grid" id="adsetGrid">
+        <div class="adset-tile" data-slot="image1">
+          <span class="adset-tile-tag">Image 1</span>
+          <img alt="">
+          <div class="adset-tile-placeholder"><span>Add image</span></div>
+        </div>
+        <div class="adset-tile" data-slot="image2">
+          <span class="adset-tile-tag">Image 2</span>
+          <img alt="">
+          <div class="adset-tile-placeholder"><span>Add image</span></div>
+        </div>
+        <div class="adset-tile" data-slot="video1">
+          <span class="adset-tile-tag">Video 1</span>
+          <video muted loop playsinline preload="metadata"><source src="" type="video/mp4"></video>
+          <div class="adset-tile-placeholder"><span>Add video</span></div>
+        </div>
+        <div class="adset-tile" data-slot="video2">
+          <span class="adset-tile-tag">Video 2</span>
+          <video muted loop playsinline preload="metadata"><source src="" type="video/mp4"></video>
+          <div class="adset-tile-placeholder"><span>Add video</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+<!-- ============ CASE STUDY 2: WIN-BACK ============ -->
+<article class="case-study reverse" id="cs-winback">
+  <div class="wrap">
+    <div class="case-study-grid">
+      <div class="case-study-media-grid">
+        <div class="cs-col">
+          <div class="cs-tile aspect-square has-media">
+            <!-- CASE STUDY GRID IMAGE 1: Win-back variant (1080x1080 square) -->
+            <img class="cs-tile-media" src="winback-grid-missing-something.jpg" alt="Missing Something? - win-back static ad">
+            <div class="cs-tile-placeholder"><span>Add image</span></div>
+          </div>
+          <div class="cs-tile aspect-portrait has-media" data-cs-video>
+            <!-- CASE STUDY GRID VIDEO 1: Win-back variant (1080x1920 portrait) -->
+            <video class="cs-tile-media" muted loop playsinline preload="metadata" poster="winback-grid-jeff-stelling-poster.jpg">
+              <source src="winback-grid-jeff-stelling.mp4" type="video/mp4">
+            </video>
+            <div class="cs-tile-placeholder"><span>Add video</span></div>
+            <div class="cs-tile-hint">Hold to play</div>
+          </div>
+        </div>
+        <div class="cs-col">
+          <div class="cs-tile aspect-portrait has-media" data-cs-video>
+            <!-- CASE STUDY GRID VIDEO 2: Win-back variant (1080x1920 portrait) -->
+            <video class="cs-tile-media" muted loop playsinline preload="metadata" poster="win-back-poster.jpg">
+              <source src="win-back-rediscover.mp4" type="video/mp4">
+            </video>
+            <div class="cs-tile-placeholder"><span>Add video</span></div>
+            <div class="cs-tile-hint">Hold to play</div>
+          </div>
+          <div class="cs-tile aspect-square has-media">
+            <!-- CASE STUDY GRID IMAGE 2: Win-back variant (1080x1080 square) -->
+            <img class="cs-tile-media" src="winback-grid-youve-missed.jpg" alt="You've missed some amazing prizes - win-back static ad">
+            <div class="cs-tile-placeholder"><span>Add image</span></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <span class="eyebrow">Win-Back · 60+ Days Lapsed</span>
+        <h3 class="case-study-title">Re-Engaging Customers Who'd Gone Quiet</h3>
+        <div class="case-study-copy">
+          <span class="label">The brief</span>
+          <p>Target customers who hadn't purchased from Football Prizes in 60 days or more. Rather than one execution, five creative variants were tested against the same audience - three copy-led statics, one video edit, and one static image - to find what actually re-activated a dormant buyer.</p>
+          <span class="label">The approach</span>
+          <p>Three angles ran in parallel to win back lapsed customers:</p>
+          <ul class="case-study-list">
+            <li><strong>Incentive</strong> - a discount code exclusive to anyone who hadn't purchased in 60 days or more.</li>
+            <li><strong>Fresh imagery</strong> - new art directions never published on Meta before, placing signed memorabilia into the context of a customer's own home and leaning on the newest shirts in stock, from Lamine Yamal to Suarez at his new home with Inter Miami, to fight the creative fatigue of seeing the same ad style on repeat.</li>
+            <li><strong>FOMO</strong> - graphics built around the idea that great prizes have already been won while the customer's been away, alongside a wall of memorabilia with one central frame missing, playing on a collector's fear of never having enough.</li>
+          </ul>
+          <p>Formats were mixed deliberately too. Some viewers want to stop scrolling and read an image at their own pace; others respond better to being told what they're looking at by a trusted face, which is where Jeff Stelling came in as the presenter for the video variants.</p>
+          <span class="label">The result</span>
+          <p>The best-performing variant, a copy-led execution, hit 7.2× ROAS, while the static-only ad lagged well behind at 1.7× - a clear signal that motion and message beat a flat image for this audience.</p>
+        </div>
+
+        <div class="stat-grid">
+          <div class="stat-cell">
+            <div class="stat-num">453</div>
+            <div class="stat-lbl">Purchases</div>
+          </div>
+          <div class="stat-cell">
+            <div class="stat-num">4.5×</div>
+            <div class="stat-lbl">Avg. ROAS (purchase-weighted)</div>
+          </div>
+          <div class="stat-cell">
+            <div class="stat-num">80.2K</div>
+            <div class="stat-lbl">Impressions</div>
+          </div>
+          <div class="stat-cell">
+            <div class="stat-num">8.9K</div>
+            <div class="stat-lbl">People Reached</div>
+          </div>
+        </div>
+        <div class="callout">5 creative variants tested · best performer hit 7.2× ROAS · static execution underperformed video/copy at 1.7×</div>
+      </div>
+    </div>
+  </div>
+</article>
+
+<!-- ============ CASE STUDY 3: SHORT-LIFESPAN ============ -->
+<article class="case-study" id="cs-shortlife">
+  <div class="wrap">
+    <div class="case-study-grid">
+      <div class="case-study-media">
+        <!-- CASE STUDY VIDEO: Short-lifespan product campaign -->
+        <video muted loop playsinline preload="metadata" poster="shortlife-competition-online-now-poster.jpg" controls>
+          <source src="shortlife-competition-online-now.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div>
+        <span class="eyebrow">Short-Lifespan · Single Product</span>
+        <h3 class="case-study-title">Built to Sprint, Not to Last</h3>
+        <div class="case-study-copy">
+          <span class="label">The brief</span>
+          <p>A live-competition push telling fans the draw is open now - a single, focused ad built to convert on urgency rather than depth of explanation, and a good example of how a standalone product push performs set against the longer-running club campaigns.</p>
+          <span class="label">The approach</span>
+          <p>This ad ran to both cold audiences and returning customers in the same flight, so the edit couldn't lean on any prior brand familiarity - the offer needed to land in seconds regardless of whether the viewer had seen Football Prizes before. The hook follows the same principle as the club campaigns: show the most desirable names in the first three seconds. Here that's a motion-graphics-led edit displaying up to six signed, framed shirts at once, with a constant on-screen line reading "Win a signed shirt for 40p!" - making clear that every shirt on screen, including names like Lionel Messi, Neymar Jr and Cristiano Ronaldo, is winnable at that price.</p>
+          <p>The edit then cuts back and forth between slow-motion close-ups of individual signatures and wider shots of the framed shirts in motion, reinforcing to the viewer that the prizes on screen are genuinely real.</p>
+          <span class="label">The result</span>
+          <p>Over a 22-day flight, frequency reached 5.2 across an audience of just over 6,000 people - enough repeat exposure to convert without overexposing - and the campaign closed at 32.3× ROAS, the strongest return of any single-product push in this portfolio.</p>
+        </div>
+
+        <div class="stat-grid">
+          <div class="stat-cell">
+            <div class="stat-num">677</div>
+            <div class="stat-lbl">Purchases</div>
+          </div>
+          <div class="stat-cell">
+            <div class="stat-num">32.3×</div>
+            <div class="stat-lbl">ROAS</div>
+          </div>
+          <div class="stat-cell">
+            <div class="stat-num">31.1K</div>
+            <div class="stat-lbl">Impressions</div>
+          </div>
+          <div class="stat-cell">
+            <div class="stat-num">6.0K</div>
+            <div class="stat-lbl">People Reached</div>
+          </div>
+        </div>
+        <div class="callout">22-day flight (3 Mar - 25 Mar) · 5.2 frequency · strongest ROAS of any single-product push</div>
+      </div>
+    </div>
+  </div>
+</article>
+
+<!-- ============ OTHER SKILLS ============ -->
+<section id="other-skills">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Beyond Paid Social</span>
+      <h2>More Than Just Editing</h2>
+      <p>Paid social is the focus of this portfolio, but it's not the whole toolkit. Here's the rest of what's on offer.</p>
+    </div>
+
+    <div class="skills-grid">
+      <!-- SKILL CARD 1: Live video production & live graphics design -->
+      <a class="skill-card" data-skill-card href="live-production.html">
+        <div class="skill-card-media">
+          <video muted loop playsinline preload="metadata" poster="gallery-in-progress-poster.jpg">
+            <source src="gallery-in-progress.mp4" type="video/mp4">
+          </video>
+          <div class="work-card-hint">Hold to preview</div>
+        </div>
+        <div class="skill-card-body">
+          <span class="skill-card-eyebrow">Live Production</span>
+          <h3 class="skill-card-title">Live Video & Graphics</h3>
+          <p class="skill-card-copy">Sole graphics creator and producer for the live draws, running five days a week, year-round. The role covers vision and audio mixing, lower thirds and cutscene animations, built in Premiere Pro and run through OBS - refined the same way it was built: through hands-on trial, error and experience.</p>
+          <span class="skill-card-cta">View the full project
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </span>
+        </div>
+      </a>
+
+      <!-- SKILL CARD 2: Photography / Videography -->
+      <a class="skill-card" data-skill-card href="photography-videography.html">
+        <div class="skill-card-media">
+          <video muted loop playsinline preload="metadata" poster="skill-photography-videography-poster.jpg">
+            <source src="skill-photography-videography.mp4" type="video/mp4">
+          </video>
+          <div class="work-card-hint">Hold to preview</div>
+        </div>
+        <div class="skill-card-body">
+          <span class="skill-card-eyebrow">Behind the Camera</span>
+          <h3 class="skill-card-title">Photography & Videography</h3>
+          <p class="skill-card-copy">Product photographer in the studio, and on the move filming TikTok content with a presenter out in the field. Trips abroad have included Köln, Germany and Barcelona, Spain, shooting paid social advertising content around El Clásico and Euro 2024.</p>
+          <span class="skill-card-cta">View the full project
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </span>
+        </div>
+      </a>
+
+      <!-- SKILL CARD 3: Podcast production & editing -->
+      <a class="skill-card" data-skill-card href="podcast-production.html">
+        <div class="skill-card-media">
+          <video muted loop playsinline preload="metadata" poster="skill-podcast-production-poster.jpg">
+            <source src="skill-podcast-production.mp4" type="video/mp4">
+          </video>
+          <div class="work-card-hint">Hold to preview</div>
+        </div>
+        <div class="skill-card-body">
+          <span class="skill-card-eyebrow">Audio & Long-Form</span>
+          <h3 class="skill-card-title">Podcast Production</h3>
+          <p class="skill-card-copy">Sole producer, editor and publisher of a 19-episode podcast run. This covered recording, editing, and visual and audio mixing, plus cutting clips for social off the back of every episode.</p>
+          <span class="skill-card-cta">View the full project
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </span>
+        </div>
+      </a>
+
+      <!-- SKILL CARD 4: AI videos -->
+      <a class="skill-card" data-skill-card href="ai-videos.html">
+        <div class="skill-card-media">
+          <video muted loop playsinline preload="metadata" poster="skill-ai-videos-poster.jpg">
+            <source src="skill-ai-videos.mp4" type="video/mp4">
+          </video>
+          <div class="work-card-hint">Hold to preview</div>
+        </div>
+        <div class="skill-card-body">
+          <span class="skill-card-eyebrow">Generative Video</span>
+          <h3 class="skill-card-title">AI Videos</h3>
+          <p class="skill-card-copy">Short-form video built with generative AI tools and finished for paid social - logo animations, ad edits and app explainers sized for the feed.</p>
+          <span class="skill-card-cta">View the full project
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<footer class="contact" id="contact">
+  <div class="wrap">
+    <span class="eyebrow">Let's Talk</span>
+    <h2>Let's make ads<br>that convert.</h2>
+    <div class="contact-links">
+      <a href="mailto:cadennsherrard@gmail.com">cadennsherrard@gmail.com</a>
+      <a href="tel:07815723705">07815 723705</a>
+    </div>
+    <div class="footer-meta">
+      <span>Caden Sherrard - Paid Social Video Editor</span>
+      <span>Football Prizes · 2021-Present</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ---------- Hover (desktop) vs. tap (touch) preview handling ----------
+  // Devices with a real mouse keep the original hover-to-play behaviour.
+  // Touch devices get tap-to-toggle instead of a "hold" gesture, because
+  // holding on iOS Safari triggers the system's own copy/save-media menu
+  // rather than our JS - tap-to-toggle sidesteps that entirely.
+  const isHoverCapable = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+  // ---------- Mobile hero sizing: exact nav height ----------
+  // Sets --nav-height from the nav's actual measured height (rather than a
+  // guessed px value) so the hero can be pushed down just far enough to never
+  // sit underneath the fixed nav bar.
+  // Note: this used to also set the hero's aspect-ratio at runtime from the
+  // video's real dimensions - removed, since the hero video is already an
+  // exact 1920x1080 (16:9) match for the static CSS fallback, and mutating
+  // layout via JS right after load turned out to be a likely trigger for an
+  // iOS Safari repaint bug that was corrupting how the ticker (its next
+  // sibling) redrew itself on scroll.
+  (function sizeHeroForMobile() {
+    const nav = document.querySelector('.nav');
+    if (nav) {
+      document.documentElement.style.setProperty('--nav-height', nav.offsetHeight + 'px');
+    }
+  })();
+
+  // ---------- Single-active-video policy ----------
+  // Decoding several videos at once is a common source of stutter on phones.
+  // Only touch devices enforce this (desktop hover is already smooth and
+  // tends to only have one card hovered at a time anyway) - whenever a new
+  // clip starts, whatever was previously playing gets paused first.
+  let activeTileVideo = null;
+  function setActiveVideo(video) {
+    if (activeTileVideo && activeTileVideo !== video) {
+      activeTileVideo.pause();
+    }
+    activeTileVideo = video;
+  }
+  function clearActiveVideo(video) {
+    if (activeTileVideo === video) activeTileVideo = null;
+  }
+
+  function wireMediaTile(tile, video, hintEl) {
+    if (!video) return;
+    if (hintEl) hintEl.textContent = isHoverCapable ? 'Hover to play' : 'Tap to play';
+
+    // Hover-in always restarts from the top - it's a quick, transient preview,
+    // so a fresh start each time reads as intentional rather than jarring.
+    function playFresh() {
+      tile.classList.add('is-playing');
+      video.currentTime = 0;
+      video.muted = false;
+      video.play().catch(() => {
+        video.muted = true;
+        video.play().catch(() => {});
+      });
+    }
+    // Tap-to-resume deliberately does NOT force currentTime back to 0 - on a
+    // mobile connection the video may not have buffered that far yet, and
+    // seeking to an unbuffered position is what causes the stall/jitter on
+    // tap. Resuming from wherever it already is keeps playback smooth.
+    function playResume() {
+      setActiveVideo(video);
+      tile.classList.add('is-playing');
+      video.muted = false;
+      video.play().catch(() => {
+        video.muted = true;
+        video.play().catch(() => {});
+      });
+    }
+    function stop() {
+      clearActiveVideo(video);
+      tile.classList.remove('is-playing');
+      video.pause();
+      video.muted = true;
+    }
+
+    if (isHoverCapable) {
+      tile.addEventListener('mouseenter', playFresh);
+      tile.addEventListener('mouseleave', stop);
+    } else {
+      tile.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        if (video.paused) playResume(); else stop();
+      });
+    }
+  }
+
+  // ---------- Hero video: pause once scrolled out of view (touch only) ----------
+  // The hero autoplays continuously, which on desktop is a non-issue, but on
+  // a phone it means every other clip you tap has to decode *alongside* the
+  // hero in the background. Once it's scrolled off-screen there's no reason
+  // to keep decoding it, so pausing it frees up real headroom for whatever
+  // clip is actually being watched further down the page.
+  if (!isHoverCapable && 'IntersectionObserver' in window) {
+    const heroVideo = document.querySelector('.hero-media');
+    if (heroVideo) {
+      const heroObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            heroVideo.play().catch(() => {});
+          } else {
+            heroVideo.pause();
+          }
+        });
+      }, { threshold: 0 });
+      heroObserver.observe(heroVideo);
+    }
+  }
+
+  // ---------- Ad Set Explorer: club tabs + 2x2 content grid ----------
+  // To add real creative: fill in the matching club's object below.
+  // image1/image2 can be either a single file path (plain image) or an
+  // array of file paths (renders as a swipeable carousel automatically -
+  // used when an ad set's creative included a carousel format). video1/
+  // video2 are always a single file path. Leave a field '' or [] to keep
+  // showing its placeholder box.
+  const clubAssets = {
+    arsenal: {
+      name: 'Arsenal',
+      image1: 'tof-arsenal-flat-ad.jpg',
+      image2: [
+        'tof-arsenal-carousel-1-gallery.png',
+        'tof-arsenal-carousel-2-vs-chelsea.png',
+        'tof-arsenal-carousel-3-vs-everton.jpg',
+        'tof-arsenal-carousel-4-bergkamp.png',
+        'tof-arsenal-carousel-5-vieira-1.png',
+        'tof-arsenal-carousel-6-vieira-2.png',
+      ],
+      video1: 'tof-arsenal-video-1-retargeting.mp4',
+      video2: 'tof-arsenal-video-2.mp4',
+    },
+    liverpool: {
+      name: 'Liverpool',
+      image1: 'tof-flat-ad.jpg',
+      image2: [
+        'tof-carousel-1-gerrard.jpg',
+        'tof-carousel-2-klopp.jpg',
+        'tof-carousel-3-vs-everton.jpg',
+        'tof-carousel-4-vs-westham.jpg',
+        'tof-carousel-5-vs-westham-2.jpg',
+        'tof-carousel-6-signed-shirt.jpg',
+        'tof-carousel-7-trent-vandijk.jpg',
+      ],
+      video1: 'tof-video-narrated.mp4',
+      video2: 'tof-video-showcase.mp4',
+    },
+    chelsea: {
+      name: 'Chelsea',
+      image1: 'tof-chelsea-flat-ad.jpg',
+      image2: [
+        'tof-chelsea-carousel-1-drogba.jpg',
+        'tof-chelsea-carousel-2-stamford-bridge.jpg',
+        'tof-chelsea-carousel-3-palmer.jpg',
+        'tof-chelsea-carousel-4-ronaldinho.jpg',
+      ],
+      video1: 'tof-chelsea-video-1-evergreen.mp4',
+      video2: 'tof-chelsea-video-2-evergreen.mp4',
+    },
+    mancity: {
+      name: 'Man City',
+      image1: 'tof-mancity-flat-ad.jpg',
+      image2: [
+        'tof-mancity-carousel-1-aguero.jpg',
+        'tof-mancity-carousel-2-trophies.jpg',
+        'tof-mancity-carousel-3-stadium-selfie.jpg',
+        'tof-mancity-carousel-4-signed-shirt.jpg',
+        'tof-mancity-carousel-5-family-stadium.jpg',
+        'tof-mancity-carousel-6-foden.jpg',
+      ],
+      video1: 'tof-mancity-video-1-evergreen.mp4',
+      video2: 'tof-mancity-video-2-evergreen.mp4',
+    },
+    manutd: {
+      name: 'Man Utd',
+      image1: 'tof-manutd-flat-ad.jpg',
+      image2: [
+        'tof-manutd-carousel-1-stadium-tour.jpg',
+        'tof-manutd-carousel-2-treble-collage.jpg',
+        'tof-manutd-carousel-3-sharp-shirt.jpg',
+        'tof-manutd-carousel-4-ronaldo-shirt.jpg',
+        'tof-manutd-carousel-5-solskjaer.jpg',
+        'tof-manutd-carousel-6-george-best.jpg',
+        'tof-manutd-carousel-7-class-of-92.jpg',
+        'tof-manutd-carousel-8-cantona.jpg',
+        'tof-manutd-carousel-9-old-trafford.jpg',
+      ],
+      video1: 'tof-manutd-video-1-evergreen.mp4',
+      video2: 'tof-manutd-video-2-evergreen.mp4',
+    },
+    spurs: {
+      name: 'Spurs',
+      image1: 'tof-spurs-flat-ad.jpg',
+      image2: [
+        'tof-spurs-carousel-1-son-shop.jpg',
+        'tof-spurs-carousel-2-stadium-selfie.jpg',
+        'tof-spurs-carousel-3-villa-fa-cup.jpg',
+        'tof-spurs-carousel-4-kane-son.jpg',
+        'tof-spurs-carousel-5-wembley-1962.jpg',
+      ],
+      video1: 'tof-spurs-video-1-evergreen.mp4',
+      video2: 'tof-spurs-video-2-evergreen.mp4',
+    },
+    newcastle: {
+      name: 'Newcastle',
+      image1: 'tof-newcastle-flat-ad.jpg',
+      image2: [
+        'tof-newcastle-carousel-1-shearer.jpg',
+        'tof-newcastle-carousel-2-saint-maximin-dog.jpg',
+        'tof-newcastle-carousel-3-joelinton.jpg',
+        'tof-newcastle-carousel-4-signed-shirt.jpg',
+        'tof-newcastle-carousel-5-trippier.jpg',
+      ],
+      video1: 'tof-newcastle-video-1-evergreen.mp4',
+      video2: 'tof-newcastle-video-2-evergreen.mp4',
+    },
+    leeds: {
+      name: 'Leeds',
+      image1: 'tof-leeds-flat-ad.jpg',
+      image2: [
+        'tof-leeds-carousel-1-elland-road-fans.jpg',
+        'tof-leeds-carousel-2-bielsa-shirt.jpg',
+        'tof-leeds-carousel-3-signed-shirt-family.jpg',
+        'tof-leeds-carousel-4-sbotop-shirt.jpg',
+        'tof-leeds-carousel-5-bielsa-photos.jpg',
+        'tof-leeds-carousel-6-viduka-bar.jpg',
+        'tof-leeds-carousel-7-centenary-shirt.jpg',
+        'tof-leeds-carousel-8-32red-shirt.jpg',
+      ],
+      video1: 'tof-leeds-video-1-evergreen.mp4',
+      video2: 'tof-leeds-video-2-evergreen.mp4',
+    },
+    nottingham: {
+      name: 'Nottingham',
+      image1: 'tof-nottingham-flat-ad.jpg',
+      image2: [
+        'tof-nottingham-carousel-1-gibbs-white.jpg',
+        'tof-nottingham-carousel-2-kaiyun-shirt.jpg',
+        'tof-nottingham-carousel-3-football-index-shirt.jpg',
+      ],
+      video1: 'tof-nottingham-video-1-evergreen.mp4',
+      video2: 'tof-nottingham-video-2-evergreen.mp4',
+    },
+  };
+
+  const SLOT_LABELS = { image1: 'Image 1', image2: 'Image 2', video1: 'Video 1', video2: 'Video 2' };
+
+  const tabsEl = document.getElementById('adsetTabs');
+  const gridEl = document.getElementById('adsetGrid');
+
+  if (tabsEl && gridEl) {
+    Object.keys(clubAssets).forEach((key, i) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'adset-tab' + (i === 0 ? ' is-active' : '');
+      btn.textContent = clubAssets[key].name;
+      btn.dataset.club = key;
+      btn.setAttribute('role', 'tab');
+      btn.setAttribute('aria-selected', i === 0 ? 'true' : 'false');
+      btn.addEventListener('click', () => selectClub(key));
+      tabsEl.appendChild(btn);
+    });
+
+    // Sizes a tile to the real aspect ratio of its media, instead of
+    // forcing every piece of creative into the same fixed crop.
+    function sizeTileToMedia(tile, mediaEl, isVideo) {
+      const apply = () => {
+        const w = isVideo ? mediaEl.videoWidth : mediaEl.naturalWidth;
+        const h = isVideo ? mediaEl.videoHeight : mediaEl.naturalHeight;
+        if (w && h) tile.style.aspectRatio = `${w} / ${h}`;
+      };
+      if (isVideo) {
+        mediaEl.addEventListener('loadedmetadata', apply);
+        if (mediaEl.readyState >= 1) apply();
+      } else {
+        mediaEl.addEventListener('load', apply);
+        if (mediaEl.complete && mediaEl.naturalWidth) apply();
+      }
+    }
+
+    // Same hover-to-play (desktop) / tap-to-toggle (touch) behaviour used
+    // on every other video tile on the site, via the shared wireMediaTile
+    // helper. Tile innerHTML gets fully rebuilt on every club switch, so
+    // old listeners are discarded along with the old nodes automatically -
+    // no manual cleanup needed.
+    function wireTileVideo(tile, video) {
+      const hintEl = tile.querySelector('.cs-tile-hint');
+      wireMediaTile(tile, video, hintEl);
+    }
+
+    function selectClub(clubKey) {
+      tabsEl.querySelectorAll('.adset-tab').forEach(t => {
+        const active = t.dataset.club === clubKey;
+        t.classList.toggle('is-active', active);
+        t.setAttribute('aria-selected', active ? 'true' : 'false');
+      });
+
+      const club = clubAssets[clubKey];
+      gridEl.querySelectorAll('.adset-tile').forEach(tile => {
+        const slot = tile.dataset.slot;
+        const value = club[slot];
+        const label = SLOT_LABELS[slot];
+
+        // Tear down any carousel or video listeners already living in this
+        // tile before we rebuild it, so nothing leaks across club switches.
+        const existingCarousel = tile.querySelector('.cs-carousel');
+        if (existingCarousel && existingCarousel._destroyCarousel) {
+          existingCarousel._destroyCarousel();
+        }
+        if (tile._cleanupVideo) {
+          tile._cleanupVideo();
+          tile._cleanupVideo = null;
+        }
+        tile.style.aspectRatio = ''; // reset to the CSS default until new media loads
+
+        if (slot.startsWith('image')) {
+          if (Array.isArray(value) && value.length > 0) {
+            // Multiple images for this slot - render as a swipeable carousel,
+            // same behaviour (drag, arrows, flick hint) as everywhere else.
+            tile.classList.add('has-media');
+            const slidesHtml = value.map((src, i) =>
+              `<div class="cs-carousel-slide"><img src="${src}" alt="${club.name} - ${label} slide ${i + 1}"></div>`
+            ).join('');
+            const arrowsHtml = value.length > 1
+              ? `<button type="button" class="cs-carousel-arrow cs-carousel-prev" aria-label="Previous slide">‹</button>
+                 <button type="button" class="cs-carousel-arrow cs-carousel-next" aria-label="Next slide">›</button>`
+              : '';
+            tile.innerHTML = `
+              <span class="adset-tile-tag">${label}</span>
+              <div class="cs-carousel" data-carousel>
+                <div class="cs-carousel-track">${slidesHtml}</div>
+                ${arrowsHtml}
+              </div>`;
+            initCarousel(tile.querySelector('.cs-carousel'));
+            // Size the tile off the first slide; a carousel's slides share one format.
+            sizeTileToMedia(tile, tile.querySelector('.cs-carousel-slide img'), false);
+          } else if (typeof value === 'string' && value) {
+            tile.classList.add('has-media');
+            tile.innerHTML = `
+              <span class="adset-tile-tag">${label}</span>
+              <img src="${value}" alt="${club.name} - ${label}">`;
+            sizeTileToMedia(tile, tile.querySelector('img'), false);
+          } else {
+            tile.classList.remove('has-media');
+            tile.innerHTML = `
+              <span class="adset-tile-tag">${label}</span>
+              <div class="adset-tile-placeholder"><span>Add ${club.name} image</span></div>`;
+          }
+        } else {
+          if (typeof value === 'string' && value) {
+            tile.classList.add('has-media');
+            tile.innerHTML = `
+              <span class="adset-tile-tag">${label}</span>
+              <video muted loop playsinline preload="metadata" poster="${value.replace(/\.mp4$/, '-poster.jpg')}"><source src="${value}" type="video/mp4"></video>
+              <div class="cs-tile-hint">${isHoverCapable ? 'Hover to play' : 'Tap to play'}</div>`;
+            const video = tile.querySelector('video');
+            sizeTileToMedia(tile, video, true);
+            wireTileVideo(tile, video);
+          } else {
+            tile.classList.remove('has-media');
+            tile.innerHTML = `
+              <span class="adset-tile-tag">${label}</span>
+              <div class="adset-tile-placeholder"><span>Add ${club.name} video</span></div>`;
+          }
+        }
+      });
+    }
+
+    selectClub(Object.keys(clubAssets)[0]);
+  }
+
+  // ---------- Ticker: populate + duplicate for seamless loop ----------
+  const tickerItems = [
+    '335,890 PURCHASES ACROSS THE ACCOUNT',
+    '16.7× AVERAGE ROAS SINCE 2023',
+    '80.8M IMPRESSIONS SERVED',
+    '13,866 PURCHASES - TOF CAMPAIGN',
+    '32.3× ROAS ON A SINGLE PRODUCT PUSH',
+    '453 LAPSED CUSTOMERS WON BACK',
+    '5 YEARS AT FOOTBALL PRIZES',
+    '100% PUBLISHED ON META'
+  ];
+  const track = document.getElementById('tickerTrack');
+  function buildTicker() {
+    const frag = document.createDocumentFragment();
+    // duplicate the list twice so a 50%-of-width loop is seamless
+    for (let d = 0; d < 2; d++) {
+      tickerItems.forEach(text => {
+        const el = document.createElement('span');
+        el.className = 'ticker-item';
+        el.textContent = text;
+        frag.appendChild(el);
+      });
+    }
+    track.appendChild(frag);
+  }
+  buildTicker();
+
+  // Scrolled via a JS rAF loop rather than a CSS @keyframes animation - iOS
+  // Safari was intermittently failing to repaint the CSS-animated version
+  // during a page scroll and dropping it entirely. Directly setting the
+  // transform every frame avoids that.
+  function startTicker() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let loopDistance = track.scrollWidth / 2; // width of one (of the two) duplicated sets
+    if (!loopDistance) return;
+    const pxPerSecond = loopDistance / 38; // matches the original 38s-per-loop pace
+    let offset = 0;
+    let lastTime = null;
+    function frame(time) {
+      if (lastTime === null) lastTime = time;
+      // Clamp the gap between frames - if the tab was backgrounded, the
+      // browser was busy, or a frame was otherwise dropped, a large dt would
+      // otherwise show up as one big visible jump rather than smooth motion.
+      const dt = Math.min((time - lastTime) / 1000, 0.1);
+      lastTime = time;
+      offset -= pxPerSecond * dt;
+      if (offset <= -loopDistance) offset += loopDistance; // wrap seamlessly
+      track.style.transform = `translate3d(${offset.toFixed(2)}px, 0, 0)`;
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+  startTicker();
+
+  // ---------- Work cards: hover (desktop) / tap-to-toggle (touch) to play ----------
+  const cards = document.querySelectorAll('[data-card]');
+
+  cards.forEach(card => {
+    const video = card.querySelector('video');
+    const hintEl = card.querySelector('.work-card-hint');
+
+    // Size the tile to the video's real aspect ratio once we know it,
+    // instead of forcing every clip into the same crop.
+    function applyNativeAspectRatio() {
+      if (video.videoWidth && video.videoHeight) {
+        card.style.aspectRatio = `${video.videoWidth} / ${video.videoHeight}`;
+      }
+    }
+    video.addEventListener('loadedmetadata', applyNativeAspectRatio);
+    if (video.readyState >= 1) applyNativeAspectRatio();
+
+    wireMediaTile(card, video, hintEl);
+  });
+
+  // ---------- Skill cards: lift + preview on hover (desktop); tap navigates directly (touch) ----------
+  // These tiles are links to another page, so on touch the safest, most
+  // predictable gesture is a plain tap straight to the destination - no
+  // hold gesture to fight with iOS's copy/save-media menu, and no
+  // tap-once-to-preview/tap-again-to-navigate confusion. Instead, on touch
+  // the preview clip just autoplays (muted, looping) as the card scrolls
+  // into view, and pauses again once it scrolls out - no interaction
+  // needed, and tapping still navigates as normal.
+  const skillCards = document.querySelectorAll('[data-skill-card]');
+
+  let skillCardObserver = null;
+  if (!isHoverCapable && 'IntersectionObserver' in window) {
+    skillCardObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const video = entry.target.querySelector('video');
+        if (!video) return;
+        if (entry.isIntersecting) {
+          setActiveVideo(video);
+          video.play().catch(() => {});
+        } else {
+          clearActiveVideo(video);
+          video.pause();
+        }
+      });
+    }, { threshold: 0.5 });
+  }
+
+  skillCards.forEach(card => {
+    const video = card.querySelector('video');
+    const hintEl = card.querySelector('.work-card-hint');
+    if (hintEl) {
+      if (isHoverCapable) {
+        hintEl.textContent = 'Hover to preview';
+      } else {
+        hintEl.style.display = 'none'; // autoplay-on-scroll needs no prompt
+      }
+    }
+
+    if (!isHoverCapable) {
+      if (skillCardObserver) skillCardObserver.observe(card);
+      return; // touch devices: autoplay-on-scroll handles the preview; the link behaves normally
+    }
+
+    function activate() {
+      card.classList.add('is-active');
+      const siblings = Array.from(card.parentElement.children);
+      const idx = siblings.indexOf(card);
+      siblings.forEach((sib, i) => {
+        if (sib === card) return;
+        sib.classList.add(i < idx ? 'push-left' : 'push-right');
+      });
+      if (video) {
+        video.currentTime = 0;
+        video.play().catch(() => {});
+      }
+    }
+    function deactivate() {
+      card.classList.remove('is-active');
+      Array.from(card.parentElement.children).forEach(sib => {
+        sib.classList.remove('push-left', 'push-right');
+      });
+      if (video) video.pause();
+    }
+
+    card.addEventListener('mouseenter', activate);
+    card.addEventListener('mouseleave', deactivate);
+  });
+
+  // ---------- Case study videos: play with sound on hover, pause + mute off ----------
+  document.querySelectorAll('.case-study-media video').forEach(video => {
+    const wrap = video.closest('.case-study-media');
+
+    // Size the frame to the video's real aspect ratio once known,
+    // so portrait, square, or landscape clips all display uncropped.
+    function applyNativeAspectRatio() {
+      if (video.videoWidth && video.videoHeight) {
+        wrap.style.aspectRatio = `${video.videoWidth} / ${video.videoHeight}`;
+      }
+    }
+    video.addEventListener('loadedmetadata', applyNativeAspectRatio);
+    if (video.readyState >= 1) applyNativeAspectRatio();
+
+    wrap.addEventListener('mouseenter', () => {
+      video.muted = false;
+      video.play().catch(() => {
+        video.muted = true;
+        video.play().catch(() => {});
+      });
+    });
+    wrap.addEventListener('mouseleave', () => {
+      video.pause();
+      video.muted = true;
+    });
+  });
+
+  // ---------- Case study media grid tiles (2x2): same play behaviour as the showcase row ----------
+  document.querySelectorAll('.cs-tile').forEach(tile => {
+    const img = tile.querySelector('img.cs-tile-media');
+    const video = tile.querySelector('video.cs-tile-media');
+    const hintEl = tile.querySelector('.cs-tile-hint');
+
+    // Reveal a tile (hide its placeholder) once real media is actually present
+    if (img && img.getAttribute('src')) tile.classList.add('has-media');
+    if (video) {
+      const source = video.querySelector('source');
+      if (source && source.getAttribute('src')) tile.classList.add('has-media');
+    }
+
+    if (!video) return; // images are static, no play behaviour needed
+
+    wireMediaTile(tile, video, hintEl);
+  });
+  // ---------- Carousel tiles: arrow nav + touch drag/swipe ----------
+  // Reusable so it can wire up both the carousels present on page load
+  // and any carousel the Ad Set Explorer builds dynamically when a slot
+  // holds multiple images for a club. Returns a destroy() fn so a tile
+  // can be safely rebuilt (e.g. switching clubs) without leaking
+  // window-level listeners or timers from the old carousel.
+  function initCarousel(carousel, carouselIndex = 0) {
+    const track = carousel.querySelector('.cs-carousel-track');
+    const slides = Array.from(carousel.querySelectorAll('.cs-carousel-slide'));
+    const prevBtn = carousel.querySelector('.cs-carousel-prev');
+    const nextBtn = carousel.querySelector('.cs-carousel-next');
+    let index = 0;
+    let dragStartX = 0;
+    let dragDeltaX = 0;
+    let isDragging = false;
+    let hasInteracted = false;
+    let hintStartTimer = null;
+    let hintInterval = null;
+    let hintEndTimer = null;
+
+    function goTo(i) {
+      index = Math.max(0, Math.min(slides.length - 1, i));
+      track.style.transform = `translateX(-${index * 100}%)`;
+    }
+
+    // ---- Flick hint: nudges the track to peek the next slide, so it's ----
+    // ---- obvious the tile can be swiped, without needing any label.   ----
+    // Repeats every 7s until the person actually uses the carousel, then
+    // stops for good.
+    function playHint() {
+      if (hasInteracted || slides.length < 2) return;
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      carousel.classList.remove('is-hinting');
+      void carousel.offsetWidth; // force reflow so the animation restarts cleanly
+      carousel.classList.add('is-hinting');
+
+      clearTimeout(hintEndTimer);
+      hintEndTimer = setTimeout(() => carousel.classList.remove('is-hinting'), 1300);
+    }
+
+    function cancelHint() {
+      hasInteracted = true;
+      clearTimeout(hintStartTimer);
+      clearInterval(hintInterval);
+      clearTimeout(hintEndTimer);
+      carousel.classList.remove('is-hinting');
+    }
+
+    if (slides.length > 1) {
+      hintStartTimer = setTimeout(() => {
+        playHint();
+        hintInterval = setInterval(playHint, 7000);
+      }, 1000 + carouselIndex * 250);
+    }
+
+    prevBtn.addEventListener('click', () => { cancelHint(); goTo(index - 1); });
+    nextBtn.addEventListener('click', () => { cancelHint(); goTo(index + 1); });
+
+    // Touch: flick/drag to navigate
+    function onTouchStart(e) {
+      cancelHint();
+      isDragging = true;
+      dragStartX = e.touches[0].clientX;
+      track.style.transition = 'none';
+    }
+    function onTouchMove(e) {
+      if (!isDragging) return;
+      dragDeltaX = e.touches[0].clientX - dragStartX;
+      track.style.transform = `translateX(calc(-${index * 100}% + ${dragDeltaX}px))`;
+    }
+    function onTouchEnd() {
+      isDragging = false;
+      track.style.transition = '';
+      const threshold = carousel.clientWidth * 0.15;
+      if (dragDeltaX > threshold) goTo(index - 1);
+      else if (dragDeltaX < -threshold) goTo(index + 1);
+      else goTo(index);
+      dragDeltaX = 0;
+    }
+    carousel.addEventListener('touchstart', onTouchStart, { passive: true });
+    carousel.addEventListener('touchmove', onTouchMove, { passive: true });
+    carousel.addEventListener('touchend', onTouchEnd);
+
+    // Desktop mouse drag too, for parity
+    function onMouseDown(e) {
+      cancelHint();
+      isDragging = true;
+      dragStartX = e.clientX;
+      track.style.transition = 'none';
+    }
+    function onMouseMove(e) {
+      if (!isDragging) return;
+      dragDeltaX = e.clientX - dragStartX;
+      track.style.transform = `translateX(calc(-${index * 100}% + ${dragDeltaX}px))`;
+    }
+    function onMouseUp() {
+      if (!isDragging) return;
+      isDragging = false;
+      track.style.transition = '';
+      const threshold = carousel.clientWidth * 0.15;
+      if (dragDeltaX > threshold) goTo(index - 1);
+      else if (dragDeltaX < -threshold) goTo(index + 1);
+      else goTo(index);
+      dragDeltaX = 0;
+    }
+    carousel.addEventListener('mousedown', onMouseDown);
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseup', onMouseUp);
+
+    goTo(0);
+
+    carousel._destroyCarousel = () => {
+      cancelHint();
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseup', onMouseUp);
+    };
+  }
+
+  document.querySelectorAll('[data-carousel]').forEach((carousel, i) => initCarousel(carousel, i));
+</script>
+
+</body>
+</html>

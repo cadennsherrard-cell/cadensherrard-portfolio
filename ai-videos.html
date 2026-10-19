@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Videos - Caden Sherrard</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg: #0a0c0f;
+    --bg-elevated: #14171c;
+    --bg-elevated-2: #1c2027;
+    --accent: #ff4d1c;
+    --accent-soft: rgba(255, 77, 28, 0.12);
+    --positive: #c6ff3d;
+    --text: #f5f3ee;
+    --text-muted: #9ca3af;
+    --text-faint: #5b6069;
+    --border: rgba(245, 243, 238, 0.1);
+    --border-strong: rgba(245, 243, 238, 0.18);
+    --font-display: 'Anton', sans-serif;
+    --font-body: 'Space Grotesk', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+  img, video { max-width: 100%; display: block; }
+
+  /* Prevents iOS Safari's long-press copy/save-media menu from firing on
+     the preview tiles, so tap-to-play can work without a system menu
+     interrupting it. */
+  video, .gallery-tile {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .wrap { max-width: 1000px; margin: 0 auto; padding: 0 32px; }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    display: inline-block;
+    margin-bottom: 14px;
+  }
+
+  h1, h2 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    text-transform: uppercase;
+    line-height: 0.95;
+  }
+
+  /* ============ NAV ============ */
+  .nav {
+    position: sticky;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 32px;
+    background: rgba(10,12,15,0.85);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-mark { font-family: var(--font-display); font-size: 22px; }
+  .nav-mark span { color: var(--accent); }
+
+  .nav-back {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.2s ease;
+  }
+  .nav-back:hover { color: var(--text); }
+
+  /* ============ HERO ============ */
+  .detail-hero {
+    padding: 96px 0 56px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .detail-hero h1 {
+    font-size: clamp(40px, 7vw, 84px);
+  }
+
+  .detail-hero p {
+    font-size: 17px;
+    color: var(--text-muted);
+    max-width: 560px;
+    margin-top: 20px;
+  }
+
+  /* ============ CONTENT ============ */
+  .detail-content { padding: 72px 0; }
+
+  /* ============ GALLERY ============ */
+  .detail-gallery {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    align-items: start;
+  }
+
+  .detail-gallery + .detail-gallery { margin-top: 40px; }
+  .detail-gallery { row-gap: 40px; }
+
+  @media (max-width: 700px) {
+    .detail-gallery { grid-template-columns: 1fr; }
+  }
+
+  .detail-gallery-single {
+    grid-template-columns: 1fr;
+  }
+
+  .gallery-tile {
+    position: relative;
+    aspect-ratio: 4 / 5; /* default until the real video loads and sets its own ratio */
+    background: linear-gradient(160deg, var(--bg-elevated-2), var(--bg-elevated));
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  .detail-gallery-single .gallery-tile {
+    aspect-ratio: 16 / 9;
+  }
+
+  .gallery-tile video {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  }
+
+  .tile-caption {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 2px 0;
+  }
+
+  .tile-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .tile-title {
+    font-family: var(--font-display);
+    font-size: 24px;
+    text-transform: uppercase;
+    line-height: 1;
+  }
+
+  .tile-hint {
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    border: 1px solid var(--border-strong);
+    padding: 5px 9px;
+    border-radius: 20px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: opacity 0.2s ease;
+  }
+
+  .gallery-tile.is-playing + .tile-caption .tile-hint { opacity: 0.35; }
+
+  /* ============ CONTACT ============ */
+  .contact {
+    padding: 100px 0 60px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+  }
+
+  .contact h2 {
+    font-size: clamp(32px, 6vw, 64px);
+    max-width: 800px;
+    margin: 0 auto 32px;
+  }
+
+  .contact-links {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+    font-family: var(--font-mono);
+    font-size: 14px;
+  }
+
+  .contact-links a {
+    border-bottom: 1px solid var(--border-strong);
+    padding-bottom: 4px;
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .contact-links a:hover { color: var(--accent); border-color: var(--accent); }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-mark">CADEN<span>.</span></div>
+  <a class="nav-back" href="index.html">&larr; Back to Portfolio</a>
+</nav>
+
+<header class="detail-hero">
+  <div class="wrap">
+    <span class="eyebrow">Generative Video</span>
+    <h1>AI Videos</h1>
+    <p>Short-form video built with generative AI tools and finished for paid social.</p>
+  </div>
+</header>
+
+<section class="detail-content">
+  <div class="wrap">
+
+    <div class="detail-gallery detail-gallery-single">
+      <!-- AI VIDEO 1: Get-Go lead animation (1920x1080) -->
+      <div class="ai-item">
+      <div class="gallery-tile" data-gallery-video>
+        <video loop playsinline preload="metadata" poster="ai-get-go-lead-animation-poster.jpg">
+          <source src="ai-get-go-lead-animation.mp4" type="video/mp4">
+        </video>
+      </div>
+        <div class="tile-caption">
+          <div>
+            <div class="tile-eyebrow">Logo Animation</div>
+            <div class="tile-title">Get-Go Lead Animation</div>
+          </div>
+          <div class="tile-hint">Hover to play</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-gallery">
+      <!-- AI VIDEO 2: Harry Kane signed ball (1080x1350) -->
+      <div class="ai-item">
+      <div class="gallery-tile" data-gallery-video>
+        <video loop playsinline preload="metadata" poster="ai-kane-signed-ball-poster.jpg">
+          <source src="ai-kane-signed-ball.mp4" type="video/mp4">
+        </video>
+      </div>
+        <div class="tile-caption">
+          <div>
+            <div class="tile-eyebrow">Paid Social Ad</div>
+            <div class="tile-title">Harry Kane Signed Ball</div>
+          </div>
+          <div class="tile-hint">Hover to play</div>
+        </div>
+      </div>
+
+      <!-- AI VIDEO 3: EGF app explainer (1080x1350) -->
+      <div class="ai-item">
+      <div class="gallery-tile" data-gallery-video>
+        <video loop playsinline preload="metadata" poster="ai-egf-explainer-poster.jpg">
+          <source src="ai-egf-explainer.mp4" type="video/mp4">
+        </video>
+      </div>
+        <div class="tile-caption">
+          <div>
+            <div class="tile-eyebrow">App Explainer</div>
+            <div class="tile-title">EGF Meal Plan Walkthrough</div>
+          </div>
+          <div class="tile-hint">Hover to play</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<footer class="contact" id="contact">
+  <div class="wrap">
+    <span class="eyebrow">Let's Talk</span>
+    <h2>Let's make something<br>worth watching.</h2>
+    <div class="contact-links">
+      <a href="mailto:cadennsherrard@gmail.com">cadennsherrard@gmail.com</a>
+      <a href="tel:07815723705">07815 723705</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Gallery tile videos: hover to preview with sound (desktop) / tap to
+  // toggle (touch), sized to each clip's real aspect ratio once known.
+  // Touch uses a tap instead of a hold, since holding on iOS Safari opens
+  // the system's own copy/save-media menu rather than triggering our JS.
+  const isHoverCapable = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+  // Single-active-video policy: only one clip decodes at a time, which
+  // keeps playback smooth on phones.
+  let activeVideo = null;
+  function setActive(video) {
+    if (activeVideo && activeVideo !== video) {
+      activeVideo.pause();
+      activeVideo.muted = true;
+      const t = activeVideo.closest('.gallery-tile');
+      if (t) t.classList.remove('is-playing');
+    }
+    activeVideo = video;
+  }
+
+  document.querySelectorAll('[data-gallery-video]').forEach(tile => {
+    const video = tile.querySelector('video');
+    const hint = tile.parentElement.querySelector('.tile-hint');
+    if (!video) return;
+    if (hint) hint.textContent = isHoverCapable ? 'Hover to play' : 'Tap to play';
+
+    function applyNativeAspectRatio() {
+      if (video.videoWidth && video.videoHeight) {
+        tile.style.aspectRatio = `${video.videoWidth} / ${video.videoHeight}`;
+      }
+    }
+    video.addEventListener('loadedmetadata', applyNativeAspectRatio);
+    if (video.readyState >= 1) applyNativeAspectRatio();
+
+    function playFresh() {
+      setActive(video);
+      tile.classList.add('is-playing');
+      video.currentTime = 0;
+      video.muted = false;
+      video.play().catch(() => {
+        // Browser blocked audio autoplay - fall back to a muted preview.
+        video.muted = true;
+        video.play().catch(() => {});
+      });
+    }
+    // Tap-to-resume deliberately does not seek back to 0, since seeking to
+    // an unbuffered position is what causes a stall on a mobile connection.
+    function playResume() {
+      setActive(video);
+      tile.classList.add('is-playing');
+      video.muted = false;
+      video.play().catch(() => {
+        video.muted = true;
+        video.play().catch(() => {});
+      });
+    }
+    function stop() {
+      if (activeVideo === video) activeVideo = null;
+      tile.classList.remove('is-playing');
+      video.pause();
+      video.muted = true;
+    }
+
+    if (isHoverCapable) {
+      tile.addEventListener('mouseenter', playFresh);
+      tile.addEventListener('mouseleave', stop);
+    } else {
+      tile.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        if (video.paused) playResume(); else stop();
+      });
+    }
+  });
+</script>
+</body>
+</html>

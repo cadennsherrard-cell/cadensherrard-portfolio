@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Live Video & Graphics - Caden Sherrard</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg: #0a0c0f;
+    --bg-elevated: #14171c;
+    --bg-elevated-2: #1c2027;
+    --accent: #ff4d1c;
+    --accent-soft: rgba(255, 77, 28, 0.12);
+    --positive: #c6ff3d;
+    --text: #f5f3ee;
+    --text-muted: #9ca3af;
+    --text-faint: #5b6069;
+    --border: rgba(245, 243, 238, 0.1);
+    --border-strong: rgba(245, 243, 238, 0.18);
+    --font-display: 'Anton', sans-serif;
+    --font-body: 'Space Grotesk', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+  img, video { max-width: 100%; display: block; }
+
+  /* Prevents iOS Safari's long-press copy/save-media menu from firing on
+     the preview tiles, so tap-to-play can work without a system menu
+     interrupting it. */
+  video, .gallery-tile {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .wrap { max-width: 1000px; margin: 0 auto; padding: 0 32px; }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    display: inline-block;
+    margin-bottom: 14px;
+  }
+
+  h1, h2 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    text-transform: uppercase;
+    line-height: 0.95;
+  }
+
+  /* ============ NAV ============ */
+  .nav {
+    position: sticky;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 32px;
+    background: rgba(10,12,15,0.85);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-mark { font-family: var(--font-display); font-size: 22px; }
+  .nav-mark span { color: var(--accent); }
+
+  .nav-back {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.2s ease;
+  }
+  .nav-back:hover { color: var(--text); }
+
+  /* ============ HERO ============ */
+  .detail-hero {
+    padding: 96px 0 56px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .detail-hero h1 {
+    font-size: clamp(40px, 7vw, 84px);
+  }
+
+  .detail-hero p {
+    font-size: 17px;
+    color: var(--text-muted);
+    max-width: 560px;
+    margin-top: 20px;
+  }
+
+  /* ============ CONTENT ============ */
+  .detail-content { padding: 72px 0; }
+
+  .detail-content p {
+    font-size: 16px;
+    line-height: 1.75;
+    color: var(--text-muted);
+    max-width: 720px;
+  }
+
+  .detail-content p + p { margin-top: 20px; }
+
+  .detail-list {
+    list-style: none;
+    max-width: 720px;
+    margin-top: 32px;
+    counter-reset: detail-list;
+  }
+
+  .detail-list li {
+    counter-increment: detail-list;
+    position: relative;
+    padding-left: 34px;
+    margin-top: 24px;
+  }
+
+  .detail-list li::before {
+    content: counter(detail-list);
+    position: absolute;
+    left: 0;
+    top: 1px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .detail-list li strong {
+    display: block;
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 17px;
+    text-transform: uppercase;
+    color: var(--text);
+    margin-bottom: 8px;
+    letter-spacing: 0.03em;
+  }
+
+  .detail-list li p {
+    font-size: 15.5px;
+    line-height: 1.7;
+    color: var(--text-muted);
+  }
+
+  /* ============ GALLERY ============ */
+  .detail-gallery {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 56px;
+  }
+
+  @media (max-width: 700px) {
+    .detail-gallery { grid-template-columns: 1fr; }
+  }
+
+  .gallery-tile {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    background: linear-gradient(160deg, var(--bg-elevated-2), var(--bg-elevated));
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .gallery-tile img,
+  .gallery-tile video {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  }
+
+  .gallery-tile-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .gallery-tile-placeholder span {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border: 1px dashed var(--border-strong);
+    padding: 10px 16px;
+    text-align: center;
+    max-width: 160px;
+  }
+
+  .gallery-tile-fade {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(10, 12, 15, 0.85) 0%, rgba(10, 12, 15, 0.15) 45%, transparent 70%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .gallery-tile-label {
+    position: absolute;
+    left: 14px;
+    right: 14px;
+    bottom: 14px;
+    z-index: 2;
+    font-family: var(--font-display);
+    font-size: 34px;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    color: var(--text);
+    line-height: 0.95;
+    pointer-events: none;
+  }
+
+  /* ============ CONTACT ============ */
+  .contact {
+    padding: 100px 0 60px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+  }
+
+  .contact h2 {
+    font-size: clamp(32px, 6vw, 64px);
+    max-width: 800px;
+    margin: 0 auto 32px;
+  }
+
+  .contact-links {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+    font-family: var(--font-mono);
+    font-size: 14px;
+  }
+
+  .contact-links a {
+    border-bottom: 1px solid var(--border-strong);
+    padding-bottom: 4px;
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+
+  /* ============ BEFORE / AFTER COMPARISON ============ */
+  .bavr {
+    margin-bottom: 64px;
+  }
+
+  .bavr-frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    --pos: 50%;
+  }
+
+  .bavr-layer {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .bavr-layer video {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  }
+
+  .bavr-after { z-index: 1; }
+
+  .bavr-before {
+    z-index: 2;
+    clip-path: inset(0 calc(100% - var(--pos)) 0 0);
+  }
+
+  .bavr-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(160deg, var(--bg-elevated-2), var(--bg-elevated));
+  }
+
+  .bavr-placeholder span {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border: 1px dashed var(--border-strong);
+    padding: 10px 16px;
+  }
+
+  .bavr-tag {
+    position: absolute;
+    top: 14px;
+    z-index: 3;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text);
+    background: rgba(10, 12, 15, 0.6);
+    border: 1px solid var(--border-strong);
+    padding: 5px 10px;
+    border-radius: 20px;
+    pointer-events: none;
+  }
+
+  .bavr-tag-before { left: 14px; }
+  .bavr-tag-after { right: 14px; }
+
+  .bavr-divider {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: var(--pos);
+    width: 2px;
+    background: var(--text);
+    transform: translateX(-50%);
+    z-index: 4;
+    pointer-events: none;
+  }
+
+  .bavr-divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--text);
+    transform: translate(-50%, -50%);
+  }
+
+  .bavr-divider::after {
+    content: '\2039\203A'; /* ‹› */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 2px;
+    color: var(--bg);
+  }
+
+  .bavr-range {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    z-index: 5;
+    opacity: 0;
+    cursor: ew-resize;
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+  }
+
+  .bavr-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 40px;
+    height: 100%;
+  }
+
+  .bavr-range::-moz-range-thumb {
+    width: 40px;
+    height: 100%;
+    border: none;
+    background: transparent;
+  }
+
+  .bavr-hint {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-top: 18px;
+    transition: opacity 0.4s ease, margin 0.4s ease, height 0.4s ease;
+  }
+
+  .bavr-hint.is-dismissed {
+    opacity: 0;
+    height: 0;
+    margin-top: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .bavr-hint-track {
+    position: relative;
+    width: 180px;
+    height: 26px;
+  }
+
+  .bavr-hint-track::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--border-strong);
+  }
+
+  .bavr-hint-pointer {
+    position: absolute;
+    top: 50%;
+    left: 15%;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--accent);
+    transform: translate(-50%, -50%);
+    animation: bavr-slide 2.2s ease-in-out infinite;
+  }
+
+  .bavr-hint-pointer::before {
+    content: '\2039\203A';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: var(--bg);
+  }
+
+  @keyframes bavr-slide {
+    0%, 100% { left: 15%; }
+    50% { left: 85%; }
+  }
+
+  .bavr-hint-text {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bavr-hint-pointer { animation: none; left: 50%; }
+  }
+
+  .contact-links a:hover { color: var(--accent); border-color: var(--accent); }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-mark">CADEN<span>.</span></div>
+  <a class="nav-back" href="index.html">&larr; Back to Portfolio</a>
+</nav>
+
+<header class="detail-hero">
+  <div class="wrap">
+    <span class="eyebrow">Live Production</span>
+    <h1>Live Video & Graphics</h1>
+    <p>Running vision and graphics live, in real time, with no second take.</p>
+  </div>
+</header>
+
+<section class="detail-content">
+  <div class="wrap">
+    <div class="bavr">
+      <div class="bavr-frame" id="bavrFrame">
+        <!-- AFTER layer: swap in the current live-draw footage -->
+        <div class="bavr-layer bavr-after">
+          <video class="bavr-video" muted loop playsinline autoplay preload="auto" poster="bavr-after-poster.jpg">
+            <source src="bavr-after.mp4" type="video/mp4">
+          </video>
+        </div>
+        <!-- BEFORE layer: swap in the old phone-camera footage -->
+        <div class="bavr-layer bavr-before">
+          <video class="bavr-video" muted loop playsinline autoplay preload="auto" poster="bavr-before-poster.jpg">
+            <source src="bavr-before.mp4" type="video/mp4">
+          </video>
+        </div>
+        <span class="bavr-tag bavr-tag-before">Before</span>
+        <span class="bavr-tag bavr-tag-after">After</span>
+        <div class="bavr-divider" id="bavrDivider"></div>
+        <input type="range" class="bavr-range" id="bavrRange" min="0" max="100" value="50" aria-label="Drag to compare the before and after live draw footage">
+      </div>
+      <div class="bavr-hint" id="bavrHint">
+        <div class="bavr-hint-track"><span class="bavr-hint-pointer"></span></div>
+        <span class="bavr-hint-text">Scroll to see before &amp; after</span>
+      </div>
+    </div>
+
+    <p>When Football Prizes' live draws started, there was no dedicated production at all: a single phone on a tripod, its built-in microphone, and a TV screen showing the site's entrants. Since then, that's grown into an eight-camera setup with dedicated microphones and the fully produced graphics package running today. Six areas drove that transformation.</p>
+
+    <ol class="detail-list">
+      <li>
+        <strong>Streaming Software</strong>
+        <p>OBS became the foundation. Where the host previously streamed straight from a phone's Facebook app with no graphics or audio mixing, OBS opened up live audio and visual mixing, graphics, lower thirds, intro videos, transitions and cutscenes.</p>
+      </li>
+      <li>
+        <strong>Multi-Cam Setup & Mics</strong>
+        <p>As the draws grew more interactive - a bagatelle game, a claw machine, a penny falls and other arcade-style games players enter by answering trivia in the comments - the camera count grew to match. The setup now runs eight cameras at once, covering the host, each game's prize zone, the lottery ball machine, and a close-up on the balls themselves to reassure viewers the draw is genuinely live. Audio moved to DJI Mic wireless mics as separate sources, so the host's voice no longer faded when they walked over to the ball machine.</p>
+      </li>
+      <li>
+        <strong>Live Graphics & Lower Thirds</strong>
+        <p>A different discipline entirely from the scroll-stopping graphics built for paid social ads. Live graphics need to stay on-brand without pulling attention away from the host or the games themselves, and that balance has held through several rebrands. Graphics are also built around what's live on screen: to reinforce that the draw is genuine, the ball machine and the host are shown on two separate live feeds at once, with the host able to move between them to prove neither is pre-recorded.</p>
+      </li>
+      <li>
+        <strong>Intros, Outros & Cutscenes</strong>
+        <p>A dedicated intro sequence - a standby screen, a two-minute countdown, then a thirty-second hype intro with upbeat music and crowd noise bleeding into the host's opening - gives latecomers time to join before results start. Outros redirect winners (and non-winners) back to the site while the moment is still fresh. Cutscenes give each arcade machine its own short intro that leads smoothly back to the host before they interact with it.</p>
+      </li>
+      <li>
+        <strong>Lighting</strong>
+        <p>The only lighting used to be an office ceiling light. It's since moved to softboxes and directional LEDs, which matter more than they sound: several of the machines (the claw machine's glass, the ball machine, the bagatelle's perspex) reflect like a mirror without carefully placed directional light.</p>
+      </li>
+      <li>
+        <strong>Stream Deck Integration</strong>
+        <p>Built from scratch to make scene switching as fast as the draw demands. Macros connect to OBS hotkeys to give single buttons a long-press/short-press function - long-press plays a machine's cutscene the first time it's used that draw, short-press jumps straight back to that scene without replaying the intro. A one-click setup button launches OBS, opens the Google Drive draw sheet, and connects Facebook Live Producer in one go, and two dedicated buttons - one for standby, one for mute - are there if anything goes wrong for the host live.</p>
+      </li>
+    </ol>
+
+    <p>Live production is a different discipline to editing paid social ads, because almost everything has to be planned for in advance rather than fixed in the edit. Backup cameras, backup mics, a standby screen and a mute button all exist for that reason - and the graphics mindset flips too: instead of designing to stop the scroll, the goal becomes staying out of the way of the live feed.</p>
+
+    <div class="detail-gallery">
+      <!-- GALLERY TILE 1: Past -->
+      <div class="gallery-tile">
+        <img src="gallery-past.jpg" alt="Football Prizes live draw setup before the production upgrade">
+        <div class="gallery-tile-fade"></div>
+        <span class="gallery-tile-label">Past</span>
+      </div>
+      <!-- GALLERY TILE 2: Present -->
+      <div class="gallery-tile" data-gallery-video>
+        <video class="gallery-tile-video" muted loop playsinline preload="metadata" poster="gallery-present-poster.jpg">
+          <source src="gallery-present.mp4" type="video/mp4">
+        </video>
+        <div class="gallery-tile-fade"></div>
+        <span class="gallery-tile-label">Present</span>
+      </div>
+      <!-- GALLERY TILE 3: In Progress -->
+      <div class="gallery-tile" data-gallery-video>
+        <video class="gallery-tile-video" muted loop playsinline preload="metadata" poster="gallery-in-progress-poster.jpg">
+          <source src="gallery-in-progress.mp4" type="video/mp4">
+        </video>
+        <div class="gallery-tile-fade"></div>
+        <span class="gallery-tile-label">In Progress</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="contact" id="contact">
+  <div class="wrap">
+    <span class="eyebrow">Let's Talk</span>
+    <h2>Let's make something<br>worth watching.</h2>
+    <div class="contact-links">
+      <a href="mailto:cadennsherrard@gmail.com">cadennsherrard@gmail.com</a>
+      <a href="tel:07815723705">07815 723705</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    const frame = document.getElementById('bavrFrame');
+    const range = document.getElementById('bavrRange');
+    const divider = document.getElementById('bavrDivider');
+    const hint = document.getElementById('bavrHint');
+    if (!frame || !range) return;
+
+    function setPos(value) {
+      frame.style.setProperty('--pos', value + '%');
+      divider.style.left = value + '%';
+    }
+
+    let dismissed = false;
+    function dismissHint() {
+      if (dismissed) return;
+      dismissed = true;
+      hint.classList.add('is-dismissed');
+    }
+
+    let introCancelled = false;
+    function cancelIntro() { introCancelled = true; }
+
+    range.addEventListener('input', (e) => {
+      setPos(e.target.value);
+      dismissHint();
+      cancelIntro();
+    });
+    range.addEventListener('pointerdown', () => { dismissHint(); cancelIntro(); });
+    range.addEventListener('touchstart', () => { dismissHint(); cancelIntro(); }, { passive: true });
+
+    setPos(range.value);
+
+    // One-time smooth sweep on load, so the interaction is obvious at a glance.
+    // Cancels instantly if the user grabs the handle mid-animation.
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!prefersReducedMotion) {
+      const waypoints = [50, 18, 85, 50];
+      const segmentMs = 750;
+      let segIndex = 0;
+      let segStart = null;
+
+      function easeInOutCubic(t) {
+        return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+      }
+
+      function tick(ts) {
+        if (introCancelled) return;
+        if (segStart === null) segStart = ts;
+        const t = Math.min((ts - segStart) / segmentMs, 1);
+        const eased = easeInOutCubic(t);
+        const from = waypoints[segIndex];
+        const to = waypoints[segIndex + 1];
+        const value = from + (to - from) * eased;
+        setPos(value);
+        range.value = value;
+
+        if (t < 1) {
+          requestAnimationFrame(tick);
+        } else {
+          segIndex++;
+          segStart = null;
+          if (segIndex < waypoints.length - 1) {
+            requestAnimationFrame(tick);
+          }
+        }
+      }
+      requestAnimationFrame(tick);
+    }
+
+    // Keep the two clips playing in lockstep, so the comparison stays meaningful
+    // as the user drags between them.
+    const videos = Array.from(frame.querySelectorAll('.bavr-video'));
+    if (videos.length === 2) {
+      const [a, b] = videos;
+      [a, b].forEach(v => v.play().catch(() => {}));
+      a.addEventListener('timeupdate', () => {
+        if (Math.abs(a.currentTime - b.currentTime) > 0.15) {
+          b.currentTime = a.currentTime;
+        }
+      });
+    }
+
+    // Gallery tile video: hover to preview (desktop) / tap to toggle (touch).
+    // Touch uses a tap instead of a hold, since holding on iOS Safari opens
+    // the system's copy/save-media menu rather than triggering our JS.
+    const isHoverCapable = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    document.querySelectorAll('[data-gallery-video]').forEach(tile => {
+      const video = tile.querySelector('video');
+      if (!video) return;
+
+      function play() {
+        video.currentTime = 0;
+        video.play().catch(() => {});
+      }
+      function stop() {
+        video.pause();
+      }
+
+      if (isHoverCapable) {
+        tile.addEventListener('mouseenter', play);
+        tile.addEventListener('mouseleave', stop);
+      } else {
+        tile.addEventListener('touchend', (e) => {
+          e.preventDefault();
+          if (video.paused) play(); else stop();
+        });
+      }
+    });
+  })();
+</script>
+</body>
+</html>
