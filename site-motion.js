@@ -66,10 +66,7 @@
 
     // Single elements
     [
-      '.eyebrow', '.section-head p', '.detail-hero p', '.intro-photo', '.intro-body p',
-      '.case-study-copy', '.callout', '.adset-head p', '.adset-tabs', '.bavr',
-      '.detail-content > .wrap > p', '.podcast-logo-row + p', '.footer-meta',
-      '.case-study-media', '.contact-links'
+      '.intro-photo', '.case-study-copy', '.bavr', '.case-study-media'
     ].forEach(function (sel) {
       $$(sel).forEach(function (el) {
         // Eyebrows sit right above headlines: tiny lead so the pair reads in order.
@@ -104,6 +101,34 @@
       var mediaGrid = grid.querySelector('.case-study-media-grid');
       if (mediaGrid) {
         mediaGrid.classList.add('reveal', reverse ? 'reveal-right' : 'reveal-left');
+      }
+    });
+
+    /* ---------- 3b. Keyboard access for video tiles ---------- */
+    var tileSel = '.work-card, .cs-tile, .adset-tile, .gallery-tile';
+    $$(tileSel).forEach(function (tile) {
+      var isVideoTile = tile.querySelector('video') || tile.classList.contains('adset-tile');
+      if (!isVideoTile || tile.classList.contains('cs-carousel')) return;
+      tile.setAttribute('tabindex', '0');
+      tile.setAttribute('role', 'button');
+      tile.setAttribute('aria-label', 'Play or pause video');
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      var tile = e.target.closest && e.target.closest(tileSel);
+      if (!tile || e.target !== tile) return;
+      var video = tile.querySelector('video');
+      if (!video) return;
+      e.preventDefault();
+      if (video.paused) {
+        $$('video').forEach(function (v) { if (v !== video && !v.classList.contains('hero-media') && !v.autoplay) v.pause(); });
+        video.muted = false;
+        video.play().catch(function () { video.muted = true; video.play().catch(function () {}); });
+        tile.classList.add('is-playing');
+      } else {
+        video.pause();
+        video.muted = true;
+        tile.classList.remove('is-playing');
       }
     });
 

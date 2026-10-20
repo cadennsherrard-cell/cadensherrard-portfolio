@@ -26,7 +26,7 @@
 }
 .reveal:not(.is-in) {
   opacity: 0;
-  translate: 0 38px;
+  translate: 0 22px;
 }
 .reveal.reveal-left:not(.is-in)  { translate: -42px 0; }
 .reveal.reveal-right:not(.is-in) { translate: 42px 0; }
@@ -74,7 +74,7 @@
 .cs-tile,
 .adset-tile,
 .gallery-tile {
-  transition: border-color 0.35s ease, box-shadow 0.35s ease;
+  transition: border-color 0.35s ease;
 }
 @media (hover: hover) and (pointer: fine) {
   .work-card:hover,
@@ -82,7 +82,6 @@
   .adset-tile:hover,
   .gallery-tile:hover {
     border-color: rgba(255, 77, 28, 0.6);
-    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
   }
   .stat-cell { transition: background 0.3s ease; }
   .stat-cell:hover { background: var(--bg-elevated, #14171c); }
@@ -115,3 +114,13 @@
   .mw > span { translate: 0 0 !important; }
   .motion-progress { display: none; }
 }
+
+/* ---- Keyboard focus: visible on every interactive element ---- */
+a:focus-visible,
+button:focus-visible,
+[tabindex]:focus-visible,
+.bavr-range:focus-visible + * {
+  outline: 2px solid var(--accent, #ff4d1c);
+  outline-offset: 3px;
+}
+.bavr-frame:focus-within { outline: 2px solid var(--accent, #ff4d1c); outline-offset: 3px; }
