@@ -621,6 +621,10 @@
   @media (max-width: 900px) {
     .case-study-grid { grid-template-columns: 1fr; }
     .case-study.reverse .case-study-grid { direction: ltr; }
+    /* Stacked on phones/tablets: title and description first, then the creative. */
+    .case-study-grid > .case-study-media-grid,
+    .case-study-grid > .case-study-media { order: 2; }
+    .case-study-grid > :not(.case-study-media-grid):not(.case-study-media) { order: 1; }
   }
 
   .case-study-media {
