@@ -1,0 +1,117 @@
+/* ============ SITE MOTION ============
+   Scroll-reveal, headline entrances, count-ups and hover polish, shared by
+   every page. Everything here only applies once site-motion.js has tagged
+   elements, so with JS off (or reduced motion on) the site is fully static. */
+
+/* ---- Scroll progress bar ---- */
+.motion-progress {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--accent, #ff4d1c);
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+  z-index: 300;
+  pointer-events: none;
+}
+
+/* ---- Generic reveal: fade + rise ----
+   Uses the individual `translate` property (not `transform`) so it never
+   fights with existing hover transforms on cards and tiles. */
+.reveal {
+  transition:
+    opacity 0.9s cubic-bezier(0.2, 0.7, 0.1, 1) var(--d, 0ms),
+    translate 0.9s cubic-bezier(0.2, 0.7, 0.1, 1) var(--d, 0ms);
+}
+.reveal:not(.is-in) {
+  opacity: 0;
+  translate: 0 38px;
+}
+.reveal.reveal-left:not(.is-in)  { translate: -42px 0; }
+.reveal.reveal-right:not(.is-in) { translate: 42px 0; }
+.reveal.reveal-scale:not(.is-in) { translate: 0 28px; scale: 0.96; }
+.reveal.reveal-scale { transition-property: opacity, translate, scale; }
+
+/* Skill cards already animate transform/box-shadow on hover - keep that and
+   add the reveal transitions alongside it. */
+.skill-card.reveal {
+  transition:
+    opacity 0.9s cubic-bezier(0.2, 0.7, 0.1, 1) var(--d, 0ms),
+    translate 0.9s cubic-bezier(0.2, 0.7, 0.1, 1) var(--d, 0ms),
+    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.4s ease,
+    border-color 0.4s ease;
+}
+
+/* ---- Headline word-mask entrance ---- */
+.mw {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding-bottom: 0.1em;
+  margin-bottom: -0.1em;
+}
+.mw > span {
+  display: inline-block;
+  translate: 0 112%;
+  transition: translate 1s cubic-bezier(0.2, 0.7, 0.1, 1) calc(var(--i, 0) * 70ms + var(--hd, 0ms));
+}
+.is-in .mw > span,
+.mw-in .mw > span { translate: 0 0; }
+
+/* ---- Eyebrow underline draw ---- */
+.eyebrow.reveal { letter-spacing: 0.18em; }
+
+/* ---- Hero parallax helpers ---- */
+.hero-media { scale: 1.12; will-change: translate; }
+@media (max-width: 640px) {
+  .hero-media { scale: 1; }
+}
+
+/* ---- Hover polish on media tiles ---- */
+.work-card,
+.cs-tile,
+.adset-tile,
+.gallery-tile {
+  transition: border-color 0.35s ease, box-shadow 0.35s ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .work-card:hover,
+  .cs-tile:hover,
+  .adset-tile:hover,
+  .gallery-tile:hover {
+    border-color: rgba(255, 77, 28, 0.6);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+  }
+  .stat-cell { transition: background 0.3s ease; }
+  .stat-cell:hover { background: var(--bg-elevated, #14171c); }
+  .detail-list li { transition: translate 0.35s ease; }
+  .detail-list li:hover { translate: 6px 0; }
+}
+
+/* ---- Index rows: accent line sweeps in on hover ---- */
+.index-row { position: relative; }
+.index-row::after {
+  content: '';
+  position: absolute;
+  left: 0; bottom: -1px;
+  height: 1px;
+  width: 100%;
+  background: var(--accent, #ff4d1c);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.1, 1);
+}
+.index-row:hover::after { transform: scaleX(1); }
+
+/* ---- Buttons / links ---- */
+.nav-back { transition: color 0.2s ease, translate 0.3s ease; }
+.nav-back:hover { translate: -4px 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal, .mw > span { transition: none !important; }
+  .reveal:not(.is-in) { opacity: 1; translate: none; scale: none; }
+  .mw > span { translate: 0 0 !important; }
+  .motion-progress { display: none; }
+}
