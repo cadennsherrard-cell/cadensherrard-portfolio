@@ -1070,16 +1070,30 @@
 
   .skills-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(6, 1fr);
     gap: 24px;
   }
 
+  .skills-grid > .skill-card { grid-column: span 2; }
+  /* five cards: centre the second row */
+  .skills-grid > .skill-card:nth-child(4) { grid-column: 2 / span 2; }
+  .skills-grid > .skill-card:nth-child(5) { grid-column: 4 / span 2; }
+
   @media (max-width: 1100px) {
     .skills-grid { grid-template-columns: repeat(2, 1fr); }
+    .skills-grid > .skill-card,
+    .skills-grid > .skill-card:nth-child(4),
+    .skills-grid > .skill-card:nth-child(5) { grid-column: auto; }
+    .skills-grid > .skill-card:last-child:nth-child(odd) {
+      grid-column: 1 / -1;
+      justify-self: center;
+      width: calc(50% - 12px);
+    }
   }
 
   @media (max-width: 700px) {
     .skills-grid { grid-template-columns: 1fr; }
+    .skills-grid > .skill-card:last-child:nth-child(odd) { width: 100%; }
   }
 
   .skill-card {
@@ -1704,6 +1718,24 @@
           <span class="skill-card-eyebrow">Generative Video</span>
           <h3 class="skill-card-title">AI Videos</h3>
           <p class="skill-card-copy">Short-form video built with generative AI tools and finished for paid social - logo animations, ad edits and app explainers sized for the feed.</p>
+          <span class="skill-card-cta">View the full project
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </span>
+        </div>
+      </a>
+
+      <!-- SKILL CARD 5: Motion graphics -->
+      <a class="skill-card" data-skill-card href="motion-graphics.html">
+        <div class="skill-card-media">
+          <video muted loop playsinline preload="metadata" poster="skill-motion-graphics-poster.jpg">
+            <source src="skill-motion-graphics.mp4" type="video/mp4">
+          </video>
+          <div class="work-card-hint">Hold to preview</div>
+        </div>
+        <div class="skill-card-body">
+          <span class="skill-card-eyebrow">Animated Design</span>
+          <h3 class="skill-card-title">Motion Graphics</h3>
+          <p class="skill-card-copy">Type, logos and shirt reveals animated to hold attention from the first second of a paid social ad - built for the feed and timed to the edit.</p>
           <span class="skill-card-cta">View the full project
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
           </span>
